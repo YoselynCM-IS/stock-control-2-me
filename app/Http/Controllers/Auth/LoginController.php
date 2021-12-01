@@ -57,6 +57,9 @@ class LoginController extends Controller
         if(auth()->user()->role_id == 6){
             return '/manager/remisiones/lista';
         }
+        if(auth()->user()->role_id == 7){
+            return '/visitor/remisiones';
+        }
     } 
     //METODOS SOBREESCRITOS
     public function username(){

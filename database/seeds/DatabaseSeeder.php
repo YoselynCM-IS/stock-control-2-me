@@ -47,6 +47,10 @@ class DatabaseSeeder extends Seeder
                 'rol'      => 'manager',
                 'created_at' => '2021-04-29 00:00:00',
                 'updated_at' => '2021-04-29 00:00:00',
+            ],
+            6 => [
+                'id'        => 7,
+                'rol'      => 'visitor'
             ]
         ]);
 
@@ -61,5 +65,15 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => '2021-04-29 00:00:00',
             ],
         ]);
+
+        // \DB::table('users')->insert([
+        //     0 => [
+        //         'role_id'   => 7,
+        //         'name'      => 'Visitor', 
+        //         'user_name' => 'visitor',
+        //         'email'     => 'visitor@gmail.com',
+        //         'password'  => bcrypt('visitor')
+        //     ],
+        // ]);
     }
 }

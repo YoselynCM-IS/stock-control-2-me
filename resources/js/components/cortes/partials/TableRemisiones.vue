@@ -16,7 +16,7 @@
                 ${{ row.item.total_pagar | formatNumber }}
             </template>
             <template slot="actions" slot-scope="row">
-                <b-button v-if="row.item.total_pagar == row.item.total" 
+                <b-button v-if="role_id != 7 && (row.item.total_pagar == row.item.total)" 
                     pill size="sm" variant="primary" @click="moveRemisione(row.item)">
                     <i class="fa fa-exchange"></i>
                 </b-button>
@@ -47,7 +47,7 @@ import setCortes from '../../../mixins/setCortes';
 import toast from '../../../mixins/toast';
 export default {
     components: { AlertVComponent, SelectCorteComponent },
-    props: ['remisiones', 'showTitle'],
+    props: ['remisiones', 'showTitle', 'role_id'],
     mixins: [formatNumber,setCortes,toast],
     data(){
         return {

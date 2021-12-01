@@ -83,6 +83,20 @@ Route::name('almacen.')->prefix('almacen')->middleware(['auth', 'role:Almacen'])
     Route::get('/movimientos', 'AlmacenController@movimientos')->name('movimientos');
 });
 
+// VISITOR
+Route::name('visitor.')->prefix('visitor')->middleware(['auth', 'role:visitor'])->group(function () {
+    Route::get('/remisiones', 'VisitorController@remisiones')->name('remisiones');
+    Route::get('/cortes', 'VisitorController@cortes')->name('cortes');
+    Route::get('/fecha-adeudo', 'VisitorController@fecha_adeudo')->name('fecha-adeudo');
+    Route::get('/libros', 'VisitorController@libros')->name('libros');
+    Route::get('/entradas', 'VisitorController@entradas')->name('entradas');
+    Route::get('/clientes', 'VisitorController@clientes')->name('clientes');
+    Route::get('/notas', 'VisitorController@notas')->name('notas');
+    Route::get('/pedidos', 'VisitorController@pedidos')->name('pedidos');
+    Route::get('/promociones', 'VisitorController@promociones')->name('promociones');
+    Route::get('/donaciones', 'VisitorController@donaciones')->name('donaciones');
+});
+
 //CLIENTES
 //Agregar cliente
 Route::post('/new_client', 'ClienteController@store')->name('new_client');

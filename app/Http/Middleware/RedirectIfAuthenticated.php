@@ -36,6 +36,9 @@ class RedirectIfAuthenticated
             if(Auth::user()->role_id == 6){
                 return redirect('/manager/remisiones/lista');
             }
+            if(Auth::user()->role_id == 7){
+                return redirect('/visitor/remisiones');
+            }
         }
 
         return $next($request);
