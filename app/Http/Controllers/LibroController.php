@@ -496,7 +496,7 @@ class LibroController extends Controller
     public function detalles_movimientos(){
         $titulo = Input::get('titulo');
         $libro = Libro::where('titulo', $titulo)
-                    ->with(['registros.entrada', 'registros.entdevoluciones','registers.note', 'departures.promotion', 'donaciones.regalo'])
+                    ->with(['registros.entrada', 'registros.entdevoluciones.entrada','registers.note', 'departures.promotion', 'donaciones.regalo'])
                     ->first();
         $datos = \DB::table('datos')
                     ->join('remisiones', 'datos.remisione_id', '=', 'remisiones.id')

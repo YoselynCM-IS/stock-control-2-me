@@ -57,9 +57,9 @@
                         </template>
                         <template slot="thead-top" slot-scope="row">
                             <tr>
-                                <th colspan="2"></th>
+                                <th colspan="3"></th>
                                 <th colspan="2" class="table-success text-center">ENTRADAS</th>
-                                <th colspan="6" class="table-primary text-center">SALIDAS</th>
+                                <th colspan="5" class="table-primary text-center">SALIDAS</th>
                                 <th></th>
                             </tr>
                         </template>
@@ -150,7 +150,7 @@
                             {{ row.item.unidades | formatNumber }}
                         </template>
                         <template slot="dato" slot-scope="row">
-                            {{ registro.entrada.folio }}
+                            {{ row.item.entrada.folio }}
                         </template>
                     </b-table>
                 </b-collapse>
@@ -353,6 +353,7 @@ import LoadComponent from '../cortes/partials/LoadComponent.vue';
             // OBTENER DETALLES DEL LIBRO
             onDetalles(libro){
                 this.load = true;
+                this.entdevoluciones = [];
                 axios.get('/detalles_movimientos', {params: {titulo: libro.libro}}).then(response => {
                     this.all_detalles = response.data.libro;
                     this.datos = response.data.datos;
