@@ -172,6 +172,17 @@
                     </tr>
                 </template>
             </b-table>
+            <div class="mt-5" v-if="entdevoluciones.length > 0">
+                <h6><b>DEVOLUCIONES</b></h6>
+                <b-table :items="entdevoluciones" :fields="fieldsR">
+                    <template slot="index" slot-scope="row">{{ row.index + 1}}</template>
+                    <template slot="isbn" slot-scope="row">{{ row.item.registro.libro.ISBN }}</template>
+                    <template slot="titulo" slot-scope="row">{{ row.item.registro.libro.titulo }}</template>
+                    <template slot="costo_unitario" slot-scope="row">${{ row.item.registro.costo_unitario | formatNumber }}</template>
+                    <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
+                    <template slot="unidades" slot-scope="row">{{ row.item.unidades | formatNumber }}</template>
+                </b-table>
+            </div>
             <!-- MODAL PARA MOSTRAR LOS PAGOS -->
             <b-modal id="modal-Mpagos" hide-footer :title="`Pagos de la entrada con folio ${entrada.folio}`">
                 <label><b>Total:</b> ${{ entrada.total | formatNumber }}</label><br>
@@ -402,6 +413,7 @@
                 stateDate: null,
                 folio: '',
                 total_unidades: 0,
+                entdevoluciones: []
             }
         },
         created: function(){
@@ -603,6 +615,7 @@
                 this.entrada.created_at = response.data.entrada.created_at;
                 this.registros = response.data.entrada.registros;
                 this.pagos = response.data.entrada.repayments;
+                this.entdevoluciones = response.data.entdevoluciones;
                 this.listadoEntradas = false;
             },
             acumular(){
