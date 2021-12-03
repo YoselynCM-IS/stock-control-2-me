@@ -29,6 +29,54 @@
                 <template slot="total_devolucion" slot-scope="row">${{ row.item.total_devolucion | formatNumber }}</template>
                 <template slot="total_pagar" slot-scope="row">${{ row.item.total_pagar | formatNumber }}</template>
                 <template slot="total_pagos" slot-scope="row">${{ row.item.total_pagos | formatNumber }}</template>
+                <template #row-details="row">
+                    <b-card>
+                        <b-list-group>
+                            <b-list-group-item v-bind:key="i" 
+                                    v-for="(tipo, i) in row.item.by_cortes">
+                                    <h6><strong>{{ tipo.corte }}</strong></h6>
+                                    <ul class="col-md-6">
+                                        <li>
+                                            <b-row>
+                                                <b-col sm="1">
+                                                    <b-badge :variant="`${tipo.cta ? 'success':'danger'}`">
+                                                        <i v-if="tipo.cta" class="fa fa-check"></i>
+                                                        <i v-else class="fa fa-close"></i>
+                                                    </b-badge>
+                                                </b-col>
+                                                <b-col sm="4"><b>TOTAL:</b></b-col>
+                                                <b-col>${{ tipo.total | formatNumber }}</b-col>
+                                            </b-row>
+                                        </li>
+                                        <li>
+                                            <b-row>
+                                                <b-col sm="1">
+                                                    <b-badge :variant="`${tipo.ctp ? 'success':'danger'}`">
+                                                        <i v-if="tipo.ctp" class="fa fa-check"></i>
+                                                        <i v-else class="fa fa-close"></i>
+                                                    </b-badge>
+                                                </b-col>
+                                                <b-col sm="4"><b>PAGOS:</b></b-col>
+                                                <b-col>${{ tipo.total_pagos | formatNumber }}</b-col>
+                                            </b-row>
+                                        </li>
+                                        <li>
+                                            <b-row>
+                                                <b-col sm="1">
+                                                    <b-badge :variant="`${tipo.ctd ? 'success':'danger'}`">
+                                                        <i v-if="tipo.ctd" class="fa fa-check"></i>
+                                                        <i v-else class="fa fa-close"></i>
+                                                    </b-badge>
+                                                </b-col>
+                                                <b-col sm="4"><b>DEVOLUCIÓN:</b></b-col>
+                                                <b-col>${{ tipo.total_devolucion | formatNumber }}</b-col>
+                                            </b-row>
+                                        </li>
+                                    </ul>
+                            </b-list-group-item>
+                        </b-list-group>
+                    </b-card>
+                </template>
             </b-table>
         </div>
         <load-component v-else></load-component>

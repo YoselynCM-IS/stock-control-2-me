@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
+use App\Remdeposito;
 use App\Remcliente;
+use App\Remisione;
 use App\Cctotale;
+use App\Deposito;
+use App\Corte;
 
 class RemclienteController extends Controller
 {
@@ -47,7 +51,7 @@ class RemclienteController extends Controller
     public function get_gralcortes(){
         $remclientes = \DB::table('remclientes')
                         ->join('clientes', 'remclientes.cliente_id', '=', 'clientes.id')
-                        ->select('clientes.id as cliente_id', 'clientes.name as name', 'total', 'total_devolucion', 'total_pagos', 'total_pagar')
+                        ->select('clientes.id as cliente_id', 'clientes.name as name', 'remclientes.id', 'total', 'total_devolucion', 'total_pagos', 'total_pagar')
                         ->where('total', '>', 0)
                         ->orderBy('clientes.name', 'asc')
                         ->get();
@@ -76,6 +80,47 @@ class RemclienteController extends Controller
                                 \DB::raw('SUM(total_pagos) as total_pagos'),
                                 \DB::raw('SUM(total_pagar) as total_pagar')
                             )->get();
+        
+        $cortes = Corte::orderBy('inicio', 'desc')->get();
+        
+        $lista = [];
+        $cortes->map(function($corte) use(&$lista, $remcliente){
+            $cctotale = Cctotale::where('cliente_id', $remcliente->cliente_id)
+                                ->where('corte_id', $corte->id)->first();
+            $remdepositos = Remdeposito::where('remcliente_id', $remcliente->id)
+                        ->where('corte_id', $corte->id)
+                        ->select(\DB::raw('SUM(pago) as pago'))->get();
+            $depositos = Remisione::where('corte_id', $corte->id)
+                        ->join('depositos', 'remisiones.id', '=', 'depositos.remisione_id')
+                        ->where('cliente_id', $remcliente->cliente_id)
+                        ->whereNotIn('estado', ['Iniciado', 'Cancelado'])
+                        ->select(
+                            \DB::raw('SUM(pago) as pago')
+                        )->get();
+            $remisiones = Remisione::where('corte_id', $corte->id)
+                        ->where('cliente_id', $remcliente->cliente_id)
+                        ->whereNotIn('estado', ['Iniciado', 'Cancelado'])
+                        ->select(
+                            \DB::raw('SUM(total) as total'),
+                            \DB::raw('SUM(total_devolucion) as total_devolucion')
+                        )->get();
+
+            $total = $remisiones[0]['total'];
+            $total_pagos = $remdepositos[0]['pago'] + $depositos[0]['pago'];
+            $total_devolucion = $remisiones[0]['total_devolucion'];
+            $c = [
+                'corte' => 'Temporada '.$corte->tipo.' '.$corte->inicio.'-'.$corte->final,
+                'total' => $total,
+                'total_pagos' => $total_pagos,
+                'total_devolucion' => $total_devolucion,
+                'cta' => $total == $cctotale->total,
+                'ctp' => $total_pagos == $cctotale->total_pagos,
+                'ctd' => $total_devolucion == $cctotale->total_devolucion
+            ];
+            $lista[] = $c;
+        });
+        
+
         $check_total = (double)$remcliente->total - ((double)$remcliente->total_devolucion + (double)$remcliente->total_pagos);
         $ta = $remcliente->total;
         $td = $remcliente->total_devolucion;
@@ -95,7 +140,9 @@ class RemclienteController extends Controller
                 'total_devolucion' => $td !== $ct['total_devolucion'] ? 'danger':'', 
                 'total_pagos' => $tp !== $ct['total_pagos'] ? 'danger':'', 
                 'total_pagar' => $tr !== $ct['total_pagar'] ? 'danger':''
-            ]
+            ],
+            '_showDetails' => true,
+            'by_cortes' => $lista
         ];
     }
 }
