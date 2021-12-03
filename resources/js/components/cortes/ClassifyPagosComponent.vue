@@ -45,6 +45,13 @@
             <template slot="pago" slot-scope="row">
                 ${{ row.item.pago | formatNumber }}
             </template>
+            <template slot="thead-top" slot-scope="row">
+                <tr>
+                    <th colspan="3"></th>
+                    <th>${{ form.total_selected | formatNumber }}</th>
+                    <th colspan="3"></th>
+                </tr>
+            </template>
         </b-table>
         <!-- MODALS -->
         <!-- Seleccionar corte -->

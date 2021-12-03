@@ -51,6 +51,14 @@
             <template slot="total_pagar" slot-scope="row">
                 ${{ row.item.total_pagar | formatNumber }}
             </template>
+            <template slot="thead-top" slot-scope="row">
+                <tr>
+                    <th colspan="3"></th>
+                    <th>${{ suma.total_salida | formatNumber }}</th>
+                    <th>${{ suma.total_devolucion | formatNumber }}</th>
+                    <th colspan="2"></th>
+                </tr>
+            </template>
         </b-table>
         <!-- MODALS -->
         <!-- Seleccionar corte -->
@@ -91,7 +99,10 @@ export default {
                 remisiones: []
             },
             cliente_id: null,
-            
+            suma: {
+                total_salida: 0,
+                total_devolucion: 0
+            }
         }
     },
     created: function() {
@@ -115,7 +126,14 @@ export default {
         },
         // SELECCIONAR REMISIONES
         onRowSelected(items) {
-            this.selected = items
+            this.selected = items;
+
+            this.suma.total_salida = 0;
+            this.suma.total_devolucion = 0;
+            this.selected.forEach(select => {
+                this.suma.total_salida += select.total;
+                this.suma.total_devolucion += select.total_devolucion;
+            });
         },
         // SELECCIONAR CLIENTE
         selectCliente(cliente){
