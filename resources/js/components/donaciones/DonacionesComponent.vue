@@ -374,9 +374,8 @@
                 return numeral(value).format("0,0[.]00"); 
             }
         },
-        mounted: function(){
+        created: function(){
             this.getResults();
-            this.acumular_unidades();
             this.assign_responsables();
         },
         methods: {
@@ -390,6 +389,7 @@
                 axios.get(`/donaciones/index?page=${page}`).then(response => {
                     this.regalosData = response.data;
                     this.regalos = response.data.data;
+                    this.acumular_unidades();
                     this.load = false;
                 }).catch(error => {
                     this.load = true;
