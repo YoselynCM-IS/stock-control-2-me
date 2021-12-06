@@ -34,26 +34,26 @@
         <div v-if="!load">
             <b-table :items="ctsclientes" :fields="fieldsClientes" responsive
                 :per-page="perPage" :current-page="currentPage" id="my-table">
-                <template slot="total" slot-scope="row">
+                <template v-slot:cell(total)="row">
                     ${{ row.item.total | formatNumber }}
                 </template>
-                <template slot="total_devolucion" slot-scope="row">
+                <template v-slot:cell(total_devolucion)="row">
                     ${{ row.item.total_devolucion | formatNumber }}
                 </template>
-                <template slot="total_pagos" slot-scope="row">
+                <template v-slot:cell(total_pagos)="row">
                     ${{ row.item.total_pagos | formatNumber }}
                 </template>
-                <template slot="total_pagar" slot-scope="row">
+                <template v-slot:cell(total_pagar)="row">
                     ${{ row.item.total_pagar | formatNumber }}
                 </template>
-                <template slot="total_favor" slot-scope="row">
+                <template v-slot:cell(total_favor)="row">
                     <div v-if="row.item.total_favor > 0">
                         ${{ row.item.total_favor | formatNumber }} <br>
                         Temp {{ row.item.corte_id_favor }}
                     </div>
                     <label v-else>N/A</label>
                 </template>
-                <template slot="show_details" slot-scope="row">
+                <template v-slot:cell(show_details)="row">
                     <b-button pill size="sm" variant="info" @click="row.toggleDetails">
                         {{ row.detailsShowing ? 'Ocultar' : 'Mostrar'}}
                     </b-button>

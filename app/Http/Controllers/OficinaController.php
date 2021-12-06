@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Enteditoriale;
 use App\Remisione;
 use App\Entrada;
 use App\Cliente;
@@ -64,5 +65,12 @@ class OficinaController extends Controller
     public function cerrar(){
         $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
         return view('oficina.cerrar', compact('responsables'));
+    }
+
+    // PAGOS DE ENTRADAS
+    public function entradas_pagos(){
+        $editoriales = Enteditoriale::orderBy('editorial', 'asc')
+                        ->withCount('entdepositos')->get();
+        return view('oficina.entradas.pagos', compact('editoriales'));
     }
 }

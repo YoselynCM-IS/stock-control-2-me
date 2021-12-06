@@ -27,7 +27,7 @@ export default {
     methods: {
         updatePago(){
             if(this.form.pago >= 0){
-                if(this.form.pago <= this.form.corte_pagar){
+                // if(this.form.pago <= this.form.corte_pagar){
                     this.state = true;
                     this.load = true; 
                     axios.put('/cortes/edit_payment', this.form).then(response => {
@@ -37,11 +37,11 @@ export default {
                         this.load = false;
                         this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
                     });
-                }
-                else{
-                    this.state = false;
-                    this.makeToast('warning', 'El pago es mayor al total a pagar.');
-                }
+                // }
+                // else{
+                //     this.state = false;
+                //     this.makeToast('warning', 'El pago es mayor al total a pagar.');
+                // }
             } else{
                 this.state = false;
                 this.makeToast('warning', 'El pago no puede ser menor a 0.');

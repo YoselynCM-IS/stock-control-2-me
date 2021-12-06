@@ -33,7 +33,7 @@
         </b-row><br>
         <div v-if="!viewDetails">
             <b-table :items="clientes" :fields="fieldsClientes" :per-page="perPage" :current-page="currentPage">
-                <template slot="details" slot-scope="row">
+                <template v-slot:cell(details)="row">
                     <b-button variant="info" v-on:click="showDetails(row.item)">Mostrar</b-button>
                 </template>
             </b-table>
@@ -47,8 +47,8 @@
         <div v-else>
             <h6><b>Cliente: </b> {{ cliente.name }}</h6><br>
             <b-table :items="cliente.registros" :fields="fieldsDetails">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="thead-top" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template #thead-top="row">
                     <tr>
                         <th colspan="2"></th>
                         <th>{{ cliente.unidades_vendidas }}</th>

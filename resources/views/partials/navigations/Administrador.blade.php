@@ -9,9 +9,9 @@
 		<a class="dropdown-item" href="{{ route('administrador.pagos') }}">
 			{{ __('Registrar pago (General)') }}
 		</a>
-		<a class="dropdown-item" href="{{ route('administrador.registrar_pago') }}">
+		<!-- <a class="dropdown-item" href="{{ route('administrador.registrar_pago') }}">
 			{{ __('Registrar pago (Remisión)') }}
-		</a>
+		</a> -->
 		<a class="dropdown-item" href="{{ route('administrador.fecha-adeudo') }}">
 			{{ __('Fecha de adeudos') }}
 		</a>
@@ -20,8 +20,21 @@
 <li>
 	<a class="nav-link" href="{{ route('administrador.libros') }}">{{ __("Libros") }}</a>
 </li>
+<li class="nav-item dropdown">
+	<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+		Entradas <span class="caret"></span>
+	</a>
+	<div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+		<a class="dropdown-item" href="{{ route('administrador.entradas') }}">
+			{{ __('Lista') }}
+		</a>
+		<a class="dropdown-item" href="{{ route('administrador.entradas.pagos') }}">
+			{{ __('Pagos') }}
+		</a>
+	</div>
+</li>
 <li>
-	<a class="nav-link" href="{{ route('administrador.entradas') }}">{{ __("Entradas") }}</a>
+	<a class="nav-link" href="{{ route('administrador.clientes') }}">{{ __("Clientes") }}</a>
 </li>
 <li class="nav-item dropdown">
 	<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -42,19 +55,18 @@
 		</a>
 	</div>
 </li>
-<li>
-	<a class="nav-link" href="{{ route('administrador.notas') }}">{{ __("Notas") }}</a>
+<li class="nav-item dropdown">
+	<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+		Otros <span class="caret"></span>
+	</a>
+	<div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+		<a class="dropdown-item" href="{{ route('administrador.notas') }}">{{ __("Notas") }}</a>
+		<a class="dropdown-item" href="{{ route('administrador.pedidos') }}">{{ __("Pedidos") }}</a>
+		<a class="dropdown-item" href="{{ route('administrador.promociones') }}">{{ __("Promociones") }}</a>
+		<a class="dropdown-item" href="{{ route('administrador.donaciones') }}">{{ __("Donaciones") }}</a>
+	</div>
 </li>
 <li>
-	<a class="nav-link" href="{{ route('administrador.pedidos') }}">{{ __("Pedidos") }}</a>
-</li>
-<li>
-	<a class="nav-link" href="{{ route('administrador.promociones') }}">{{ __("Promociones") }}</a>
-</li>
-<li>
-	<a class="nav-link" href="{{ route('administrador.donaciones') }}">{{ __("Donaciones") }}</a>
-</li>
-<li>
-	<a class="nav-link" href="{{ route('administrador.clientes') }}">{{ __("Clientes") }}</a>
+	<a class="nav-link" href="{{ route('administrador.majestic') }}" target="_blank">{{ __("MAJESTIC") }}</a>
 </li>
 @include('partials.navigations.logged')

@@ -39,17 +39,22 @@
             :items="pagos.data" :fields="fieldsPagos"
             :select-mode="selectMode" ref="selectableTable"
             selectable @row-selected="onRowSelected">
-            <template slot="index" slot-scope="row">
+            <template v-slot:cell(index)="row">
                 {{ row.index + 1 }}
             </template>
-            <template slot="pago" slot-scope="row">
+            <template v-slot:cell(pago)="row">
                 ${{ row.item.pago | formatNumber }}
             </template>
-            <template slot="thead-top" slot-scope="row">
+            <template #thead-top="row">
                 <tr>
                     <th colspan="3"></th>
                     <th>${{ form.total_selected | formatNumber }}</th>
-                    <th colspan="3"></th>
+                    <th colspan="3" class="text-center">
+                        <b-button :disabled="cliente_id == null"
+                            size="sm" @click="selectAllRows" pill variant="dark">
+                            <i class="fa fa-check"></i>
+                        </b-button>
+                    </th>
                 </tr>
             </template>
         </b-table>
@@ -141,6 +146,10 @@ export default {
             this.selected.forEach(sd => {
                 this.form.total_selected += sd.pago;
             });
+        },
+        // SELECCIONAR TODO
+        selectAllRows() {
+            this.$refs.selectableTable.selectAllRows()
         },
         // PAGOS GUARDADOS
         pagosGuardados(respuesta){

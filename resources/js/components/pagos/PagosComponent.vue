@@ -40,29 +40,29 @@
             <div v-if="!load">
                 <b-table v-if="remisiones.length > 0"
                     :items="remisiones" :fields="fields" responsive hover>
-                    <template slot="index" slot-scope="row">
+                    <template v-slot:cell(index)="row">
                         {{ row.index + 1 }}
                     </template>
-                    <template slot="cliente" slot-scope="row">{{ row.item.cliente.name }}</template>
-                    <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
-                    <template slot="total_devolucion" slot-scope="row">${{ row.item.total_devolucion | formatNumber }}</template>
-                    <template slot="total_pagar" slot-scope="row">${{ row.item.total_pagar | formatNumber }}</template>
-                    <template slot="total_pagos" slot-scope="row">${{ row.item.total_pagos | formatNumber }}</template>
-                    <template slot="ver_pagos" slot-scope="row">
+                    <template v-slot:cell(cliente)="row">{{ row.item.cliente.name }}</template>
+                    <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
+                    <template v-slot:cell(total_devolucion)="row">${{ row.item.total_devolucion | formatNumber }}</template>
+                    <template v-slot:cell(total_pagar)="row">${{ row.item.total_pagar | formatNumber }}</template>
+                    <template v-slot:cell(total_pagos)="row">${{ row.item.total_pagos | formatNumber }}</template>
+                    <template v-slot:cell(ver_pagos)="row">
                         <b-button
                             v-if="row.item.total_devolucion > 0 || row.item.total_pagos > 0"
                             @click="verPagos(row.item)"
                             variant="info">Mostrar
                         </b-button>
                     </template>
-                    <template slot="pagar" slot-scope="row">
+                    <template v-slot:cell(pagar)="row">
                         <b-button 
                             v-if="row.item.total_pagar > 0 && (role_id === 1 || role_id === 2)"
                             @click="registrarDeposito(row.item, row.index)"
                             variant="primary">Registrar
                         </b-button>
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>${{ total_salida | formatNumber }}</th>
@@ -147,16 +147,16 @@
             <div v-if="detailsRemC.remdepositos.length > 0">
                 <h5><b>Pagos de forma general</b></h5>
                 <b-table :items="detailsRemC.remdepositos" :fields="fieldsRem">
-                    <template slot="index" slot-scope="row">
+                    <template v-slot:cell(index)="row">
                         {{ row.index + 1 }}
                     </template>
-                    <template slot="pago" slot-scope="row">
+                    <template v-slot:cell(pago)="row">
                         ${{ row.item.pago | formatNumber }}
                     </template>
-                    <template slot="created_at" slot-scope="row">
+                    <template v-slot:cell(created_at)="row">
                         {{ row.item.created_at }}
                     </template>
-                    <template slot="revisado" slot-scope="row">
+                    <template v-slot:cell(revisado)="row">
                         <label v-if="row.item.revisado">
                             <i class="fa fa-check" style="color:green;"></i> Revisado el: {{ row.item.updated_at | moment }}
                         </label>
@@ -169,13 +169,13 @@
             <div v-if="detailsRemC.depositos.length > 0">
                 <h5><b>Pagos por remisión</b></h5>
                 <b-table :items="detailsRemC.depositos" :fields="fieldsDepositos">
-                    <template slot="index" slot-scope="row">
+                    <template v-slot:cell(index)="row">
                         {{ row.index + 1 }}
                     </template>
-                    <template slot="pago" slot-scope="row">
+                    <template v-slot:cell(pago)="row">
                         ${{ row.item.pago | formatNumber }}
                     </template>
-                    <template slot="created_at" slot-scope="row">
+                    <template v-slot:cell(created_at)="row">
                         {{ row.item.created_at }}
                     </template>
                 </b-table>

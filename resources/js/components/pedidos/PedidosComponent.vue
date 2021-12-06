@@ -31,21 +31,21 @@
             </b-row>
             <b-table v-if="pedidos.length > 0" :items="pedidos" :fields="fieldsPedidos"
                 :per-page="perPage" :current-page="currentPage" :busy="load">
-                <template slot="index" slot-scope="data">
+                <template v-slot:cell(index)="data">
                     {{ data.index + 1 }}
                 </template>
-                <template slot="total_bill" slot-scope="data">
+                <template v-slot:cell(total_bill)="data">
                     ${{ data.item.total_bill | formatNumber }}
                 </template>
-                <template slot="date" slot-scope="data">
+                <template v-slot:cell(date)="data">
                     {{ data.item.date | moment }}
                 </template>
-                <template slot="details" slot-scope="data" pill>
+                <template v-slot:cell(details)="data" pill>
                     <b-button variant="info" pill @click="details_pedido(data.item, data.index)" :disabled="load">
                         <i class="fa fa-exclamation-circle"></i>
                     </b-button>
                 </template>
-                <template slot="status" slot-scope="data">
+                <template v-slot:cell(status)="data">
                     <b-badge v-if="data.item.status === 'espera'" variant="secondary">en espera</b-badge>
                     <b-badge v-if="data.item.status === 'cancelado'" variant="danger">{{ data.item.status }}</b-badge>
                     <b-badge v-if="data.item.status === 'rechazado'" variant="dark">{{ data.item.status }}</b-badge>
@@ -108,25 +108,25 @@
             </b-row>
 
             <b-table :items="form.registros" :fields="fieldsRegistros">
-                <template slot="index" slot-scope="data">
+                <template v-slot:cell(index)="data">
                     {{ data.index + 1 }}
                 </template>
-                <template slot="isbn" slot-scope="data">
+                <template v-slot:cell(isbn)="data">
                     {{ data.item.libro.isbn }}
                 </template>
-                <template slot="title" slot-scope="data">
+                <template v-slot:cell(title)="data">
                     {{ data.item.libro.title }}
                 </template>
-                <template slot="quantity" slot-scope="data">
+                <template v-slot:cell(quantity)="data">
                     {{ data.item.quantity | formatNumber }}
                 </template>
-                <template slot="unit_price" slot-scope="data">
+                <template v-slot:cell(unit_price)="data">
                     ${{ data.item.unit_price | formatNumber }}
                 </template>
-                <template slot="total" slot-scope="data">
+                <template v-slot:cell(total)="data">
                     ${{ data.item.total | formatNumber }}
                 </template>
-                <template slot="edit" slot-scope="data">
+                <template v-slot:cell(edit)="data">
                     <b-button variant="warning" pill @click="edit_register(data.item, data.index)"
                         :disabled="load">
                         <i v-if="!editar2 || data.index !== position" class="fa fa-edit"></i>
@@ -138,7 +138,7 @@
                     </b-button>
                 </template>
 
-                <template slot="thead-top">
+                <template #thead-top="row">
                     <tr>
                         <th><b>{{ !editar2 ? 'Agregar':'Editar' }}</b></th>
                         <th>ISBN</th>
@@ -249,31 +249,31 @@
             </b-row>
             <b-table :items="pedido.elements" 
                 :fields="fieldsRegistros">
-                <template slot="index" slot-scope="data">
+                <template v-slot:cell(index)="data">
                     {{ data.index + 1 }}
                 </template>
-                <template slot="isbn" slot-scope="data">
+                <template v-slot:cell(isbn)="data">
                     {{ data.item.libro.ISBN }}
                 </template>
-                <template slot="title" slot-scope="data">
+                <template v-slot:cell(title)="data">
                     {{ data.item.libro.titulo }}
                 </template>
-                <template slot="quantity" slot-scope="data">
+                <template v-slot:cell(quantity)="data">
                     {{ data.item.quantity | formatNumber }}
                 </template>
-                <template slot="actual_quantity" slot-scope="data">
+                <template v-slot:cell(actual_quantity)="data">
                     {{ data.item.actual_quantity | formatNumber }}
                 </template>
-                <template slot="unit_price" slot-scope="data">
+                <template v-slot:cell(unit_price)="data">
                     ${{ data.item.unit_price | formatNumber }}
                 </template>
-                <template slot="total" slot-scope="data">
+                <template v-slot:cell(total)="data">
                     ${{ data.item.total | formatNumber }}
                 </template>
-                <template slot="actual_total" slot-scope="data">
+                <template v-slot:cell(actual_total)="data">
                     ${{ data.item.actual_total | formatNumber }}
                 </template>
-                <template slot="thead-top">
+                <template #thead-top="row">
                     <tr class="mt-5">
                         <th colspan="4"></th>
                         <th class="text-right"><b>Total Factura</b></th>
@@ -295,23 +295,23 @@
                 <!-- <div v-if="pedidoStatus.status == 'incompleto'" class="mt-2">
                     <label><b>Introducir número de piezas que se recibieron</b></label>
                     <b-table :items="pedidoStatus.elements" :fields="fieldsRegistros">
-                        <template slot="index" slot-scope="data">
+                        <template v-slot:cell(index)="data">
                             {{ data.index + 1 }}
                         </template>
-                        <template slot="isbn" slot-scope="data">
+                        <template v-slot:cell(isbn)="data">
                             {{ data.item.libro.ISBN }}
                         </template>
-                        <template slot="title" slot-scope="data">
+                        <template v-slot:cell(title)="data">
                             {{ data.item.libro.titulo }}
                         </template>
-                        <template slot="quantity" slot-scope="data">
+                        <template v-slot:cell(quantity)="data">
                             <b-input required type="number" v-model="data.item.actual_quantity"
                                 @keyup="get_actual_total(data.item, data.index)" :disabled="load"></b-input>
                         </template>
-                        <template slot="unit_price" slot-scope="data">
+                        <template v-slot:cell(unit_price)="data">
                             ${{ data.item.unit_price | formatNumber }}
                         </template>
-                        <template slot="total" slot-scope="data">
+                        <template v-slot:cell(total)="data">
                             ${{ data.item.actual_total | formatNumber }}
                         </template>
                     </b-table>

@@ -100,12 +100,12 @@
                 :per-page="perPage" 
                 :current-page="currentPage"
                 v-if="promotions.length > 0">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="created_at" slot-scope="row">{{ row.item.created_at | moment }}</template>
-                <template slot="detalles" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(created_at)="row">{{ row.item.created_at | moment }}</template>
+                <template v-slot:cell(detalles)="row">
                     <b-button variant="info" @click="detallesPromotion(row.item)">Detalles</b-button>
                 </template>
-                <template slot="thead-top" slot-scope="row">
+                <template #thead-top="row">
                     <tr>
                         <th colspan="3"></th>
                         <th>{{ total_unidades | formatNumber }}</th>
@@ -141,10 +141,10 @@
             </b-row>
             <h6 v-if="promocion.descripcion !== null"><b>Descripción</b>: {{ promocion.descripcion }}</h6>
             <b-table :items="promocion.departures" :fields="fieldsD">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                <template slot="titulo" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                <template slot="thead-top" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                <template v-slot:cell(titulo)="row">{{ row.item.libro.titulo }}</template>
+                <template #thead-top="row">
                     <tr>
                         <th colspan="3"></th>
                         <th>{{ promocion.unidades }}</th>
@@ -194,15 +194,15 @@
             </b-row>
             <hr>
             <b-table :items="registros" :fields="fieldsR">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.ISBN }}</template>
-                <template slot="titulo" slot-scope="row">{{ row.item.titulo }}</template>
-                <template slot="eliminar" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.ISBN }}</template>
+                <template v-slot:cell(titulo)="row">{{ row.item.titulo }}</template>
+                <template v-slot:cell(eliminar)="row">
                     <b-button variant="danger" @click="eliminarRegistro(row.index)">
                         <i class="fa fa-minus-circle"></i>
                     </b-button>
                 </template>
-                <template slot="thead-top" slot-scope="row">
+                <template #thead-top="row">
                         <tr>
                             <th colspan="1"></th>
                             <th>ISBN</th>
@@ -285,10 +285,10 @@
                     ><b>Responsable de la entrega: </b> {{ promocion.entregado_por }}
                 </label>
                 <b-table :items="registros" :fields="fieldsR">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="ISBN" slot-scope="row">{{ row.item.ISBN }}</template>
-                    <template slot="titulo" slot-scope="row">{{ row.item.titulo }}</template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(ISBN)="row">{{ row.item.ISBN }}</template>
+                    <template v-slot:cell(titulo)="row">{{ row.item.titulo }}</template>
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="3"></th>
                             <th>{{ unidades_crear | formatNumber }}</th>

@@ -25,20 +25,7 @@
             </b-col>
         </b-row>
         <hr>
-        <!-- INFORMACION DE LA REMISION -->
-        <b-row>
-            <b-col sm="8">
-                <label><b>Cliente:</b> {{ remision.cliente.name }}</label><br>
-                <label><b>Fecha de creación:</b> {{ remision.fecha_creacion }}</label>
-            </b-col>
-            <b-col sm="4">
-                <label><b>Fecha de entrega:</b> {{ remision.fecha_entrega }}</label><br>
-                <label v-if="remision.responsable !== null && remision.responsable !== 'NA'">
-                    <b>Responsable de entrega:</b> {{ remision.responsable }}
-                </label>
-            </b-col>
-        </b-row>
-        <br>
+        <datos-remision :remision="remision" :cliente_name="remision.cliente.name"></datos-remision>
         <!-- DATOS DE LA REMISION -->
         <table class="table table-hover">
             <thead>
@@ -75,22 +62,7 @@
                 <h4><b>Pagos</b></h4>
             </b-button>
             <b-collapse id="collapse-3" v-model="mostrarPagos" class="mt-2">
-                <b-table hover :items="remision.depositos" :fields="fieldsDep">
-                    <template slot="index" slot-scope="row">
-                        {{ row.index + 1 }}
-                    </template>
-                    <template slot="pago" slot-scope="row">
-                        ${{ row.item.pago | formatNumber }}
-                    </template>
-                    <template slot="created_at" slot-scope="row">
-                        {{ row.item.created_at | moment }}
-                    </template>
-                    <template slot="thead-top" slot-scope="row">
-                        <tr>
-                            <th colspan="2"></th><th><h5>${{ total_depositos | formatNumber }}</h5></th>
-                        </tr>
-                    </template>
-                </b-table>
+                <depositos-remision :depositos="remision.depositos"></depositos-remision>>
             </b-collapse>
         </div>
         <br><br>
@@ -132,19 +104,19 @@
                 <hr>
                 <h5><b>Detalles de la devolución</b></h5>
                 <b-table hover :items="remision.fechas" :fields="fieldsFechas">
-                    <template  slot="isbn" slot-scope="data">
+                    <template  v-slot:cell(isbn)="data">
                         {{ data.item.libro.ISBN}}
                     </template>
-                    <template  slot="titulo" slot-scope="data">
+                    <template  v-slot:cell(titulo)="data">
                         {{ data.item.libro.titulo}}
                     </template>
-                    <template  slot="unidades" slot-scope="data">
+                    <template  v-slot:cell(unidades)="data">
                         {{ data.item.unidades | formatNumber }}
                     </template>
-                    <template  slot="total" slot-scope="data">
+                    <template  v-slot:cell(total)="data">
                         ${{ data.item.total | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="5"></th>
                             <th><h5>${{ remision.total_devolucion | formatNumber }}</h5></th>
@@ -176,9 +148,9 @@
                 <hr>
                 <b-table v-if="remision.comentarios.length" 
                     :items="remision.comentarios" :fields="fieldsComen">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="user_id" slot-scope="row">{{ row.item.user.name }}</template>
-                    <template slot="created_at" slot-scope="row">{{ row.item.created_at | moment }}</template> 
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(user_id)="row">{{ row.item.user.name }}</template>
+                    <template v-slot:cell(created_at)="row">{{ row.item.created_at | moment }}</template> 
                 </b-table>
                 <b-alert v-else show variant="secondary">La remisión no tiene comentarios</b-alert>
             </div>
@@ -202,21 +174,18 @@
 import formatNumber from '../../mixins/formatNumber';
 import toast from '../../mixins/toast';
 import moment from '../../mixins/moment';
+import DatosRemision from './partials/DatosRemision.vue';
+import DepositosRemision from './partials/DepositosRemision.vue';
 export default {
     props: ['remision', 'role_id'],
+    components: {DatosRemision, DepositosRemision},
     mixins: [formatNumber,toast,moment],
     data(){
         return {
             mostrarPagos: false,
-            total_depositos: 0,
             mostrarDevolucion: false,
             load: false,
             newComment: false,
-            fieldsDep: [
-                {key: 'index', label: 'No.'},
-                {key: 'created_at', label: 'Fecha de pago'},
-                'pago'
-            ],
             fieldsFechas: [
                 { key: 'fecha_devolucion', label: 'Fecha' },
                 { key: 'entregado_por', label: 'Entregada por' },
@@ -236,11 +205,6 @@ export default {
             }
             
         }
-    },
-    created: function(){
-        this.remision.depositos.forEach(deposito => {
-            this.total_depositos += deposito.pago;
-        });
     },
     methods: {
         ini_comment(){

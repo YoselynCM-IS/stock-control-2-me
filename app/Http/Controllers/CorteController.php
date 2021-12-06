@@ -219,7 +219,7 @@ class CorteController extends Controller
     public function get_pagos(){
         $remdepositos = Remdeposito::where('corte_id', 0)
                         ->with('remcliente.cliente')
-                        ->orderBy('created_at', 'asc')->paginate(20);
+                        ->orderBy('created_at', 'desc')->paginate(20);
         return response()->json($remdepositos);
     }
 
@@ -230,7 +230,7 @@ class CorteController extends Controller
             $remdepositos = Remdeposito::where('corte_id', 0)
                         ->where('remcliente_id', $remcliente->id)
                         ->with('remcliente.cliente')
-                        ->orderBy('created_at', 'asc')->paginate(20);
+                        ->orderBy('created_at', 'desc')->paginate(20);
             return response()->json($remdepositos);
         }
         return response()->json(false);

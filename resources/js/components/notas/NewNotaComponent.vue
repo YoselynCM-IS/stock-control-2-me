@@ -98,38 +98,38 @@
                 id="my-table" 
                 :per-page="perPage" 
                 :current-page="currentPage">
-                <template slot="created_at" slot-scope="row">
+                <template v-slot:cell(created_at)="row">
                     {{ row.item.created_at | moment }}
                 </template>
-                <template slot="total_salida" slot-scope="row">
+                <template v-slot:cell(total_salida)="row">
                     ${{ row.item.total_salida | formatNumber }}
                 </template>
-                <template slot="pagos" slot-scope="row">
+                <template v-slot:cell(pagos)="row">
                     ${{ row.item.pagos | formatNumber }}
                 </template>
-                <template slot="total_devolucion" slot-scope="row">
+                <template v-slot:cell(total_devolucion)="row">
                     ${{ row.item.total_devolucion | formatNumber }}
                 </template>
-                <template slot="total_pagar" slot-scope="row">
+                <template v-slot:cell(total_pagar)="row">
                     ${{ row.item.total_pagar | formatNumber }}
                 </template>
-                <template slot="detalles" slot-scope="row">
+                <template v-slot:cell(detalles)="row">
                     <b-button variant="info" @click="detallesNota(row.item)">Detalles</b-button>
                 </template>
-                <template slot="pagar" slot-scope="row">
+                <template v-slot:cell(pagar)="row">
                     <b-button 
                         v-if="(role_id == 3 || role_id == 6) && row.item.total_pagar > 0" 
                         variant="secondary" 
                         @click="registrarPago(row.item, row.index)">Pago
                     </b-button>
                 </template>
-                <template slot="devolucion" slot-scope="row">
+                <template v-slot:cell(devolucion)="row">
                     <b-button
                         v-if="(role_id == 3 || role_id == 6) && row.item.total_pagar > 0" 
                         variant="primary"
                         @click="registrarDevolucion(row.item, row.index)">Devolución</b-button>
                 </template>
-                <template slot="editar" slot-scope="row">
+                <template v-slot:cell(editar)="row">
                     <b-button
                         id="btnNotaE"
                         v-if="(role_id == 3 || role_id == 6) && row.item.total_pagar > 0" 
@@ -137,7 +137,7 @@
                         @click="editarNota(row.item, row.index)"
                         ><i class="fa fa-pencil"></i></b-button>
                 </template>
-                <template slot="thead-top" slot-scope="row">
+                <template #thead-top="row">
                     <tr>
                         <th colspan="3"></th>
                         <th>${{ total_salida | formatNumber }}</th>
@@ -172,27 +172,27 @@
                 </b-col>
             </b-row>
             <b-table :items="nota.registers" :fields="fieldsD">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                <template slot="libro" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
-                <template slot="pagos" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                <template v-slot:cell(libro)="row">{{ row.item.libro.titulo }}</template>
+                <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
+                <template v-slot:cell(pagos)="row">
                     <b-button v-if="row.item.payments.length > 0" variant="outline-info" @click="row.toggleDetails">
                         {{ row.detailsShowing ? 'Ocultar' : 'Mostrar'}}
                     </b-button>
                 </template>
-                <template slot="row-details" slot-scope="row">
+                <template v-slot:cell(row-details)="row">
                     <b-card>
                         <b-table :items="row.item.payments" :fields="fieldsP">
-                            <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                            <template slot="unidades" slot-scope="row">{{ row.item.unidades | formatNumber }}</template>
-                            <template slot="pago" slot-scope="row">$ {{ row.item.pago | formatNumber }}</template>
-                            <template slot="created_at" slot-scope="row">{{ row.created_at | moment }}</template>
+                            <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                            <template v-slot:cell(unidades)="row">{{ row.item.unidades | formatNumber }}</template>
+                            <template v-slot:cell(pago)="row">$ {{ row.item.pago | formatNumber }}</template>
+                            <template v-slot:cell(created_at)="row">{{ row.created_at | moment }}</template>
                         </b-table>
                     </b-card>
                 </template>
-                <template slot="thead-top" slot-scope="row">
+                <template #thead-top="row">
                     <tr>
                         <th colspan="4"></th>
                         <th>{{ nota.total_unidades | formatNumber }}</th>
@@ -223,11 +223,11 @@
                 </b-col>
             </b-row>
             <b-table :items="nota.registers" :fields="fieldsNP">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                <template slot="libro" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                <template slot="unidades" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                <template v-slot:cell(libro)="row">{{ row.item.libro.titulo }}</template>
+                <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                <template v-slot:cell(unidades)="row">
                     <b-input 
                         :id="`inpPago-${row.index}`"
                         type="number" 
@@ -236,8 +236,8 @@
                         v-model="row.item.unidades_base">
                     </b-input>
                 </template>
-                <template slot="total" slot-scope="row">${{ row.item.total_base | formatNumber }}</template>
-                <template slot="thead-top" slot-scope="row">
+                <template v-slot:cell(total)="row">${{ row.item.total_base | formatNumber }}</template>
+                <template #thead-top="row">
                     <tr>
                         <th colspan="4"></th>
                         <th>{{ total_unidades | formatNumber }}</th>
@@ -251,13 +251,13 @@
                 <h5><b>Folio {{ nota.folio }}</b></h5>
                 <label><b>Cliente:</b> {{ nota.cliente }}</label><br>
                 <b-table :items="nota.registers" :fields="fields">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                    <template slot="titulo" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                    <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                    <template slot="unidades" slot-scope="row">{{ row.item.unidades_base }}</template>
-                    <template slot="total" slot-scope="row">${{ row.item.total_base | formatNumber }}</template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                    <template v-slot:cell(titulo)="row">{{ row.item.libro.titulo }}</template>
+                    <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                    <template v-slot:cell(unidades)="row">{{ row.item.unidades_base }}</template>
+                    <template v-slot:cell(total)="row">${{ row.item.total_base | formatNumber }}</template>
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="4"></th>
                             <th>{{ total_unidades | formatNumber }}</th>
@@ -303,11 +303,11 @@
                 </b-col>
             </b-row>
             <b-table :items="nota.registers" :fields="fieldsNP">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                <template slot="libro" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                <template slot="unidades" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                <template v-slot:cell(libro)="row">{{ row.item.libro.titulo }}</template>
+                <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                <template v-slot:cell(unidades)="row">
                     <b-input 
                         :id="`inpPago-${row.index}`"
                         type="number" 
@@ -315,8 +315,8 @@
                         v-model="row.item.unidades_base">
                     </b-input>
                 </template>
-                <template slot="total" slot-scope="row">${{ row.item.total_base | formatNumber }}</template>
-                <template slot="thead-top" slot-scope="row">
+                <template v-slot:cell(total)="row">${{ row.item.total_base | formatNumber }}</template>
+                <template #thead-top="row">
                     <tr>
                         <th colspan="4"></th>
                         <th>{{ total_unidades | formatNumber }}</th>
@@ -330,13 +330,13 @@
                 <h5><b>Folio {{ nota.folio }}</b></h5>
                 <label><b>Cliente:</b> {{ nota.cliente }}</label><br>
                 <b-table :items="nota.registers" :fields="fields">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                    <template slot="titulo" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                    <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                    <template slot="total" slot-scope="row">${{ row.item.total_base | formatNumber }}</template>
-                    <template slot="unidades" slot-scope="row">{{ row.item.unidades_base }}</template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                    <template v-slot:cell(titulo)="row">{{ row.item.libro.titulo }}</template>
+                    <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                    <template v-slot:cell(total)="row">${{ row.item.total_base | formatNumber }}</template>
+                    <template v-slot:cell(unidades)="row">{{ row.item.unidades_base }}</template>
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="4"></th>
                             <th>{{ total_unidades | formatNumber }}</th>
@@ -399,12 +399,12 @@
             </b-row><br>
             <div>
                 <b-table :items="registers" :fields="fields">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                    <template slot="titulo" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                    <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                    <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
-                    <template slot="eliminar" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                    <template v-slot:cell(titulo)="row">{{ row.item.libro.titulo }}</template>
+                    <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                    <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
+                    <template v-slot:cell(eliminar)="row">
                         <b-button 
                             variant="danger"
                             @click="eliminarRegistro(row.item, row.index)" 
@@ -413,7 +413,7 @@
                             <i class="fa fa-minus-circle"></i>
                         </b-button>
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="1"></th>
                             <th>ISBN</th>
@@ -503,12 +503,12 @@
                 <label><b>Cliente: </b><label style="text-transform:uppercase;">{{ cliente }}</label></label>
                 <br>
                 <b-table :items="registers" :fields="fields">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                    <template slot="titulo" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                    <template slot="costo_unitario" slot-scope="row">${{ row.item.costo_unitario | formatNumber }}</template>
-                    <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                    <template v-slot:cell(titulo)="row">{{ row.item.libro.titulo }}</template>
+                    <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
+                    <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="4"></th>
                             <th>{{ total_unidades | formatNumber }}</th>

@@ -2,15 +2,15 @@
     <div>
         <b-table v-if="remdepositos.length > 0"
             :items="remdepositos" :fields="fieldsPagos" responsive>
-            <template slot="pago" slot-scope="row">
+            <template v-slot:cell(pago)="row">
                 ${{ row.item.pago | formatNumber }}
             </template>
-            <template v-if="showTitle" slot="thead-top" slot-scope="row">
+            <template v-if="showTitle" #thead-top="row">
                 <tr>
                     <th colspan="5" class="text-center">Pagos</th>
                 </tr>
             </template>
-            <template v-if="role_id == 6" slot="actions" slot-scope="row">
+            <template v-if="role_id == 6" v-slot:cell(actions)="row">
                 <b-button pill size="sm" variant="primary" @click="movePago(row.item)">
                     <i class="fa fa-exchange"></i>
                 </b-button>

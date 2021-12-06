@@ -45,7 +45,7 @@
                     :fields="fieldsClientes" 
                     :per-page="perPage" 
                     :current-page="currentPage">
-                    <template slot="seleccion" slot-scope="row">
+                    <template v-slot:cell(seleccion)="row">
                         <b-button variant="success" @click="seleccionCliente(row.item)">
                             <i class="fa fa-check"></i>
                         </b-button>

@@ -29,6 +29,9 @@ Route::name('administrador.')->prefix('administrador')->middleware(['auth', 'rol
     Route::get('/registrar_pago', 'AdministradorController@registrar_pago')->name('registrar_pago');
     Route::get('/fecha-adeudo', 'AdministradorController@fecha_adeudo')->name('fecha-adeudo');
 
+    Route::name('entradas.')->prefix('entradas')->group(function () {
+        Route::get('/pagos', 'AdministradorController@entradas_pagos')->name('pagos');
+    });
     
     Route::get('/unidades', 'AdministradorController@unidades')->name('unidades');
     Route::get('/getUnidades', 'AdministradorController@getUnidades')->name('getUnidades');
@@ -41,6 +44,8 @@ Route::name('administrador.')->prefix('administrador')->middleware(['auth', 'rol
     Route::get('/download_ulibros', 'AdministradorController@download_ulibros')->name('download_ulibros');
 
     Route::get('/comparativa', 'AdministradorController@comparativa')->name('comparativa');
+
+    Route::get('/majestic', 'AdministradorController@majestic')->name('majestic');
 });
 
 // CONTADOR
@@ -63,6 +68,10 @@ Route::name('oficina.')->prefix('oficina')->middleware(['auth', 'role:Oficina'])
     Route::get('/donaciones', 'OficinaController@donaciones')->name('donaciones');
     Route::get('/fecha-adeudo', 'OficinaController@fecha_adeudo')->name('fecha-adeudo');
     Route::get('/cerrar', 'OficinaController@cerrar')->name('cerrar');
+
+    Route::name('entradas.')->prefix('entradas')->group(function () {
+        Route::get('/pagos', 'OficinaController@entradas_pagos')->name('pagos');
+    });
 });
 
 // CAPTURA

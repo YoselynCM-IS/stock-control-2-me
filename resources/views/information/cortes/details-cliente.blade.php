@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.app-simple')
 
 @section('content')
     <details-pagos-component :role_id="{{auth()->user()->role_id}}"

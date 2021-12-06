@@ -33,7 +33,7 @@
             <div v-if="!load">
                 <b-table responsive hover 
                             :items="cortes.data" :fields="fieldsCortes">
-                    <template slot="details" slot-scope="row">
+                    <template v-slot:cell(details)="row">
                         <!-- DETALLES -->
                         <b-button variant="info" pill @click="getDetails(row.item)">
                             <i class="fa fa-info-circle"></i>

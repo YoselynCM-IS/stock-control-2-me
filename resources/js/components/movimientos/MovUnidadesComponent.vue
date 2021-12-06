@@ -28,34 +28,34 @@
                         :items="movimientos"
                         :fields="fields"
                         :tbody-tr-class="rowClass">
-                        <template slot="existencia" slot-scope="row">
+                        <template v-slot:cell(existencia)="row">
                             {{ row.item.existencia | formatNumber }}
                         </template>
-                        <template slot="entradas" slot-scope="row">
+                        <template v-slot:cell(entradas)="row">
                             {{ row.item.entradas | formatNumber }}
                         </template>
-                        <template slot="devoluciones" slot-scope="row">
+                        <template v-slot:cell(devoluciones)="row">
                             {{ row.item.devoluciones | formatNumber }}
                         </template>
-                        <template slot="notas" slot-scope="row">
+                        <template v-slot:cell(notas)="row">
                             {{ row.item.notas | formatNumber }}
                         </template>
-                        <template slot="remisiones" slot-scope="row">
+                        <template v-slot:cell(remisiones)="row">
                             {{ row.item.remisiones | formatNumber }}
                         </template>
-                        <template slot="notas" slot-scope="row">
+                        <template v-slot:cell(notas)="row">
                             {{ row.item.notas | formatNumber }}
                         </template>
-                        <template slot="promociones" slot-scope="row">
+                        <template v-slot:cell(promociones)="row">
                             {{ row.item.promociones | formatNumber }}
                         </template>
-                        <template slot="donaciones" slot-scope="row">
+                        <template v-slot:cell(donaciones)="row">
                             {{ row.item.donaciones | formatNumber }}
                         </template>
-                        <template slot="detalles" slot-scope="row">
+                        <template v-slot:cell(detalles)="row">
                             <b-button variant="info" @click="onDetalles(row.item)">Detalles</b-button>
                         </template>
-                        <template slot="thead-top" slot-scope="row">
+                        <template #thead-top="row">
                             <tr>
                                 <th colspan="3"></th>
                                 <th colspan="2" class="table-success text-center">ENTRADAS</th>
@@ -102,10 +102,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-1">
                     <b-table striped hover :items="all_detalles.registros" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.entrada.folio }}
                         </template>
                     </b-table>
@@ -124,10 +124,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-4">
                     <b-table striped hover :items="devoluciones" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.remisione.id }}
                         </template>
                     </b-table>
@@ -146,10 +146,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-2">
                     <b-table striped hover :items="entdevoluciones" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.entrada.folio }}
                         </template>
                     </b-table>
@@ -168,10 +168,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-3">
                     <b-table striped hover :items="datos" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.remisione_id }}
                         </template>
                     </b-table>
@@ -190,10 +190,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-5">
                     <b-table striped hover :items="all_detalles.registers" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.note.folio }}
                         </template>
                     </b-table>
@@ -212,10 +212,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-6">
                     <b-table striped hover :items="all_detalles.donaciones" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.regalo.plantel }}
                         </template>
                     </b-table>
@@ -234,10 +234,10 @@
                 </b-row><br>
                 <b-collapse visible id="collapse-7">
                     <b-table striped hover :items="all_detalles.departures" :fields="fregistros">
-                        <template slot="unidades" slot-scope="row">
+                        <template v-slot:cell(unidades)="row">
                             {{ row.item.unidades | formatNumber }}
                         </template>
-                        <template slot="dato" slot-scope="row">
+                        <template v-slot:cell(dato)="row">
                             {{ row.item.promotion.folio }}
                         </template>
                     </b-table>

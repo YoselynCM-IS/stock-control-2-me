@@ -29,8 +29,18 @@
 <li>
 	<a class="nav-link" href="{{ route('oficina.donaciones') }}">{{ __("Donaciones") }}</a>
 </li>
-<li>
-	<a class="nav-link" href="{{ route('oficina.entradas') }}">{{ __("Entradas") }}</a>
+<li class="nav-item dropdown">
+	<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+		Entradas <span class="caret"></span>
+	</a>
+	<div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
+		<a class="dropdown-item" href="{{ route('oficina.entradas') }}">
+			{{ __('Lista') }}
+		</a>
+		<a class="dropdown-item" href="{{ route('oficina.entradas.pagos') }}">
+			{{ __('Pagos') }}
+		</a>
+	</div>
 </li>
 <li>
 	<a class="nav-link" href="{{ route('oficina.libros') }}">{{ __("Libros") }}</a>

@@ -11,31 +11,31 @@
             </b-col>
         </b-row>
         <b-table :items="editoriales" :fields="fieldsEntrada">
-            <template slot="total" slot-scope="row">
+            <template v-slot:cell(total)="row">
                 ${{ row.item.total | formatNumber }}
             </template>
-            <template slot="total_pagos" slot-scope="row">
+            <template v-slot:cell(total_pagos)="row">
                 ${{ row.item.total_pagos | formatNumber }}
             </template>
-            <template slot="total_devolucion" slot-scope="row">
+            <template v-slot:cell(total_devolucion)="row">
                 ${{ row.item.total_devolucion | formatNumber }}
             </template>
-            <template slot="total_pendiente" slot-scope="row">
+            <template v-slot:cell(total_pendiente)="row">
                 ${{ row.item.total - (row.item.total_pagos + row.item.total_devolucion) | formatNumber }}
             </template>
-            <template slot="pagar" slot-scope="row">
-                <b-button v-if="row.item.total > 0 && row.item.total_pendiente > 0 && (role_id === 1 || role_id === 2 || role_id == 6)" 
+            <template v-slot:cell(pagar)="row">
+                <b-button v-if="row.item.total > 0 && row.item.total_pendiente > 0 && (role_id === 2 || role_id == 6)" 
                     variant="primary" pill @click="registrarMonto(row.item)">
                     Realizar pago
                 </b-button>
             </template>
-            <template slot="pagos" slot-scope="row">
+            <template v-slot:cell(pagos)="row">
                 <b-button v-if="row.item.entdepositos_count > 0" 
                     variant="info" pill @click="verPagos(row.item)">
                     Ver pagos
                 </b-button>
             </template>
-            <template slot="thead-top" slot-scope="row">
+            <template #thead-top="row">
                 <tr>
                     <th colspan="1">&nbsp;</th>
                     <th>${{ eTotals.total | formatNumber }}</th>
@@ -52,18 +52,18 @@
         </b-modal>
         <b-modal ref="modal-mostrarPagos" :title="entrada.editorial" hide-footer size="lg">
             <b-table :items="entrada.entdepositos" :fields="fieldsDep">
-                <template slot="index" slot-scope="row">{{ row.index + 1}}</template>
-                <template slot="pago" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1}}</template>
+                <template v-slot:cell(pago)="row">
                     ${{ row.item.pago | formatNumber }}
                 </template>
-                <template slot="thead-top" slot-scope="row">
+                <template #thead-top="row">
                     <tr>
                         <th colspan="2">&nbsp;</th>
                         <th>${{ eTotals.total_pagos | formatNumber }}</th>
                         <th colspan="3">&nbsp;</th>
                     </tr>
                 </template>
-                <template v-if="role_id == 6" slot="actions" slot-scope="row">
+                <template v-if="role_id == 6" v-slot:cell(actions)="row">
                     <b-button pill variant="warning" size="sm" @click="editPago(row.item)">
                         <i class="fa fa-pencil"></i>
                     </b-button>
@@ -175,7 +175,7 @@ export default {
             swal("OK", msg, "success")
                 .then((value) => {
                     let ruta = '#';
-                    if(this.role_id === 2) ruta = '/oficina/entradas';
+                    if(this.role_id === 2) ruta = '/oficina/entradas/pagos';
                     if(this.role_id === 6) ruta = '/manager/entradas/pagos';
                     location.href = ruta;
                 });

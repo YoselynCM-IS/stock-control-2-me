@@ -26,14 +26,14 @@
         <!-- TABLA DE CLIENTES -->
         <b-table v-if="!load" hover class="mt-3" responsive
             :items="remclientesData.data" :fields="fieldsRemCs">
-            <template slot="index" slot-scope="row">
+            <template v-slot:cell(index)="row">
                 {{ row.index + 1 }}
             </template>
-            <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
-            <template slot="total_devolucion" slot-scope="row">${{ row.item.total_devolucion | formatNumber }}</template>
-            <template slot="total_pagar" slot-scope="row">${{ row.item.total_pagar | formatNumber }}</template>
-            <template slot="total_pagos" slot-scope="row">${{ row.item.total_pagos | formatNumber }}</template>
-            <template slot="ver_pagos" slot-scope="row">
+            <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
+            <template v-slot:cell(total_devolucion)="row">${{ row.item.total_devolucion | formatNumber }}</template>
+            <template v-slot:cell(total_pagar)="row">${{ row.item.total_pagar | formatNumber }}</template>
+            <template v-slot:cell(total_pagos)="row">${{ row.item.total_pagos | formatNumber }}</template>
+            <template v-slot:cell(ver_pagos)="row">
                 <b-button v-if="row.item.total_devolucion > 0 || row.item.total_pagos > 0"
                     :href="`/cortes/details_cliente/${row.item.cliente_id}`" target="blank" 
                     variant="info" pill>Mostrar

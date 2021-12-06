@@ -130,22 +130,22 @@
                     <b-table v-if="remisiones.length" :busy="load"
                         responsive hover :items="remisiones" :fields="fields" 
                         :tbody-tr-class="rowClass">
-                        <template slot="cliente_id" slot-scope="row">
+                        <template v-slot:cell(cliente_id)="row">
                             {{ row.item.cliente.name }}
                         </template>
-                        <template slot="total" slot-scope="row">
+                        <template v-slot:cell(total)="row">
                             ${{ row.item.total | formatNumber }}
                         </template>
-                        <template slot="total_devolucion" slot-scope="row">
+                        <template v-slot:cell(total_devolucion)="row">
                             ${{ row.item.total_devolucion | formatNumber }}
                         </template>
-                        <template slot="pagos" slot-scope="row">
+                        <template v-slot:cell(pagos)="row">
                             ${{ row.item.pagos | formatNumber }}
                         </template>
-                        <template slot="total_pagar" slot-scope="row">
+                        <template v-slot:cell(total_pagar)="row">
                             ${{ row.item.total_pagar | formatNumber }}
                         </template>
-                        <template slot="detalles" slot-scope="row">
+                        <template v-slot:cell(detalles)="row">
                             <!-- <b-button variant="info" @click="detallesRemision(row.item)">
                                 Detalles
                             </b-button> -->
@@ -154,14 +154,14 @@
                                 Detalles
                             </b-button>
                         </template>
-                        <template slot="responsable" slot-scope="row">
+                        <template v-slot:cell(responsable)="row">
                             <b-button
                                 @click="selectResponsable(row.item, row.index)"
                                 v-if="(role_id === 3 || role_id == 6) && row.item.responsable === null && row.item.estado !== 'Cancelado'"
                                 variant="warning"><i class="fa fa-frown-o"></i>
                             </b-button>
                         </template>
-                        <template slot="editar" slot-scope="row">
+                        <template v-slot:cell(editar)="row">
                             <!-- <b-button 
                                 variant="warning" 
                                 v-if="(role_id === 2 || role_id == 6) && row.item.updated_at === row.item.created_at && row.item.total_pagar === row.item.total && row.item.estado !== 'Cancelado'" 
@@ -176,7 +176,7 @@
                             </b-button>
                         </template>
                         <!-- ENCABEZADO DE TOTALES -->
-                        <!-- <template slot="thead-top" slot-scope="row" v-if="role_id != 3">
+                        <!-- <template #thead-top="row" v-if="role_id != 3">
                             <tr>
                                 <th colspan="3"></th>
                                 <th>${{ total_salida | formatNumber }}</th>
@@ -222,186 +222,6 @@
                 </template>
             </b-modal>
         </div>
-        <!-- DETALLES DE LA REMISIÓN -->
-        <!-- <div v-if="detalles">
-            <b-row>
-                <b-col sm="4"><h5><b>Remisión No. {{ remision.id }}</b></h5></b-col>
-                <b-col sm="2" class="text-right">
-                    <b-button 
-                        variant="dark" 
-                        v-b-modal.modal-cancelar 
-                        v-if="(role_id == 2 || role_id == 6) && remision.total_pagar === remision.total && remision.estado != 'Cancelado'">
-                        <i class="fa fa-close"></i> Cancelar
-                    </b-button>
-                    <b-badge variant="danger" v-if="remision.estado == 'Cancelado'">Remisión cancelada</b-badge>
-                </b-col>
-                <b-col sm="2" class="text-right">
-                    <b-button v-b-modal.my-comentarios @click="ini_comment()" variant="dark" v-if="role_id !== 4">
-                       <i class="fa fa-comment"></i> Comentarios
-                    </b-button>
-                </b-col>
-                <b-col sm="2" class="text-right">
-                    <a class="btn btn-dark" v-if="role_id !== 2" :href="'/imprimirSalida/' + remision.id">
-                        <i class="fa fa-download"></i> Descargar
-                    </a>
-                    <b-button v-if="role_id === 2 || role_id == 6" :href="`/download_remision/${remision.id}`" variant="dark">
-                        <i class="fa fa-download"></i> Descargar
-                    </b-button>
-                </b-col>
-                <b-col sm="2" class="text-right">
-                    <b-button 
-                        variant="secondary"
-                        @click="detalles = false; listaRemisiones = true;">
-                        <i class="fa fa-mail-reply"></i> Regresar
-                    </b-button>
-                </b-col>
-            </b-row>
-            <hr>
-            <b-row>
-                <b-col sm="8">
-                    <label><b>Cliente:</b> {{ remision.cliente.name }}</label><br>
-                    <label><b>Fecha de creación:</b> {{ remision.fecha_creacion }}</label>
-                </b-col>
-                <b-col sm="4">
-                    <label><b>Fecha de entrega:</b> {{ remision.fecha_entrega }}</label><br>
-                    <label v-if="remision.responsable !== null && remision.responsable !== 'NA'">
-                        <b>Responsable de entrega:</b> {{ remision.responsable }}
-                    </label>
-                </b-col>
-            </b-row>
-            <br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <td></td><td></td>
-                        <td></td><td></td>
-                        <td><h5>${{ remision.total | formatNumber }}</h5></td>
-                    </tr>
-                    <tr>
-                        <th scope="col">ISBN</th>
-                        <th scope="col">Libro</th>
-                        <th scope="col">Costo unitario</th>
-                        <th scope="col">Unidades</th>
-                        <th scope="col">Subtotal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(registro, i) in registros" v-bind:key="i">
-                        <td>{{ registro.libro.ISBN }}</td>
-                        <td>{{ registro.libro.titulo }}</td>
-                        <td>${{ registro.costo_unitario | formatNumber }}</td>
-                        <td>{{ registro.unidades }}</td>
-                        <td>${{ registro.total | formatNumber }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-            <b-button 
-                v-if="depositos.length > 0"
-                variant="link" 
-                :class="mostrarPagos ? 'collapsed' : null"
-                :aria-expanded="mostrarPagos ? 'true' : 'false'"
-                aria-controls="collapse-3"
-                @click="mostrarPagos = !mostrarPagos">
-                <h4><b>Pagos</b></h4>
-            </b-button>
-            <b-collapse id="collapse-3" v-model="mostrarPagos" class="mt-2">
-                <b-table hover :items="depositos" :fields="fieldsDep">
-                    <template slot="index" slot-scope="row">
-                        {{ row.index + 1 }}
-                    </template>
-                    <template slot="pago" slot-scope="row">
-                        ${{ row.item.pago | formatNumber }}
-                    </template>
-                    <template slot="created_at" slot-scope="row">
-                        {{ row.item.created_at | moment }}
-                    </template>
-                    <template slot="thead-top" slot-scope="row">
-                        <tr>
-                            <th colspan="2"></th><th><h5>${{ total_depositos | formatNumber }}</h5></th>
-                        </tr>
-                    </template>
-                </b-table>
-            </b-collapse>
-            <br><br>
-            <b-button 
-                v-if="remision.total_devolucion > 0"
-                variant="link" 
-                :class="mostrarDevolucion ? 'collapsed' : null"
-                :aria-expanded="mostrarDevolucion ? 'true' : 'false'"
-                aria-controls="collapse-2"
-                @click="mostrarDevolucion = !mostrarDevolucion">
-                <h4><b>Devolución</b></h4>
-            </b-button>
-            <b-collapse id="collapse-2" v-model="mostrarDevolucion" class="mt-2">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <td></td><td></td>
-                            <td></td><td></td>
-                            <td><h5>${{ remision.total_devolucion | formatNumber }}</h5></td>
-                        </tr>
-                        <tr>
-                            <th scope="col">ISBN</th>
-                            <th scope="col">Libro</th>
-                            <th scope="col">Costo unitario</th>
-                            <th scope="col">Unidades</th>
-                            <th scope="col">Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(devolucion, i) in devoluciones" v-bind:key="i">
-                            <td>{{ devolucion.libro.ISBN }}</td>
-                            <td>{{ devolucion.libro.titulo }}</td>
-                            <td>${{ devolucion.dato.costo_unitario | formatNumber }}</td>
-                            <td>{{ devolucion.unidades }}</td>
-                            <td>${{ devolucion.total | formatNumber }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <hr>
-                <h5><b>Detalles de la devolución</b></h5>
-                <b-table hover :items="fechas" :fields="fieldsFechas">
-                    <template  slot="isbn" slot-scope="data">
-                        {{ data.item.libro.ISBN}}
-                    </template>
-                    <template  slot="titulo" slot-scope="data">
-                        {{ data.item.libro.titulo}}
-                    </template>
-                    <template  slot="unidades" slot-scope="data">
-                        {{ data.item.unidades | formatNumber }}
-                    </template>
-                    <template  slot="total" slot-scope="data">
-                        ${{ data.item.total | formatNumber }}
-                    </template>
-                    <template slot="thead-top" slot-scope="row">
-                        <tr>
-                            <th colspan="5"></th>
-                            <th><h5>${{ remision.total_devolucion | formatNumber }}</h5></th>
-                        </tr>
-                    </template>
-                </b-table>
-            </b-collapse>
-        </div> -->
-        <!-- CREAR UNA NUEVA REMISIÓN -->
-        <!-- <div v-if="newEditRemision">
-            <b-row>
-                <b-col><h4 style="color: #170057">{{ !editar ? 'Crear':'Editar' }} remisión</h4></b-col>
-                <b-col sm="2" align="right">
-                    <b-button 
-                        variant="secondary"
-                        @click="newEditRemision = false; listaRemisiones = true;">
-                        <i class="fa fa-mail-reply"></i> Regresar
-                    </b-button>
-                </b-col>
-            </b-row><br>
-            <remision-component
-                :clientesall="clientes"
-                :editar="editar"
-                :remision="datosRemision"
-                @actListado="actualizarRs">
-            </remision-component>
-        </div> -->
     </div>
 </template>
 

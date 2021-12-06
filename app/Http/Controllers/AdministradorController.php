@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\UnidadesExport;
 use App\Exports\ULibrosExport;
 use Illuminate\Http\Request;
+use App\Enteditoriale;
 use App\Remcliente;
 use App\Promotion;
 use App\Remisione;
@@ -293,5 +294,15 @@ class AdministradorController extends Controller
         return view('administrador.fecha-adeudo');
     }
 
+    // VISTA PARA MAJESTIC
+    public function majestic(){
+        return view('information.majesticeducation.index');
+    }
     
+    // PAGOS DE ENTRADAS
+    public function entradas_pagos(){
+        $editoriales = Enteditoriale::orderBy('editorial', 'asc')
+                        ->withCount('entdepositos')->get();
+        return view('administrador.entradas.pagos', compact('editoriales'));
+    }
 }

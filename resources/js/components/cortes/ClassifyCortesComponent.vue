@@ -39,24 +39,29 @@
             :items="remisiones.data" :fields="fieldsRems"
             :select-mode="selectMode" responsive ref="selectableTable"
             selectable @row-selected="onRowSelected">
-            <template slot="total" slot-scope="row">
+            <template v-slot:cell(total)="row">
                 ${{ row.item.total | formatNumber }}
             </template>
-            <template slot="total_devolucion" slot-scope="row">
+            <template v-slot:cell(total_devolucion)="row">
                 ${{ row.item.total_devolucion | formatNumber }}
             </template>
-            <template slot="total_pagos" slot-scope="row">
+            <template v-slot:cell(total_pagos)="row">
                 ${{ row.item.pagos | formatNumber }}
             </template>
-            <template slot="total_pagar" slot-scope="row">
+            <template v-slot:cell(total_pagar)="row">
                 ${{ row.item.total_pagar | formatNumber }}
             </template>
-            <template slot="thead-top" slot-scope="row">
+            <template #thead-top="row">
                 <tr>
                     <th colspan="3"></th>
                     <th>${{ suma.total_salida | formatNumber }}</th>
                     <th>${{ suma.total_devolucion | formatNumber }}</th>
-                    <th colspan="2"></th>
+                    <th colspan="2" class="text-center">
+                        <b-button :disabled="cliente_id == null" 
+                            size="sm" @click="selectAllRows" pill variant="dark">
+                            <i class="fa fa-check"></i>
+                        </b-button>
+                    </th>
                 </tr>
             </template>
         </b-table>
@@ -127,13 +132,16 @@ export default {
         // SELECCIONAR REMISIONES
         onRowSelected(items) {
             this.selected = items;
-
             this.suma.total_salida = 0;
             this.suma.total_devolucion = 0;
             this.selected.forEach(select => {
                 this.suma.total_salida += select.total;
                 this.suma.total_devolucion += select.total_devolucion;
             });
+        },
+        // SELECCIONAR TODO
+        selectAllRows() {
+            this.$refs.selectableTable.selectAllRows()
         },
         // SELECCIONAR CLIENTE
         selectCliente(cliente){

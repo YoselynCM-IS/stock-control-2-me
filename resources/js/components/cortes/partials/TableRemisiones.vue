@@ -3,25 +3,25 @@
         <b-table v-if="remisiones.length > 0"
             :items="remisiones" :fields="fieldsRems"
             responsive :tbody-tr-class="rowClass">
-            <template slot="total" slot-scope="row">
+            <template v-slot:cell(total)="row">
                 ${{ row.item.total | formatNumber }}
             </template>
-            <template slot="total_devolucion" slot-scope="row">
+            <template v-slot:cell(total_devolucion)="row">
                 ${{ row.item.total_devolucion | formatNumber }}
             </template>
-            <template slot="total_pagos" slot-scope="row">
+            <template v-slot:cell(total_pagos)="row">
                 ${{ row.item.pagos | formatNumber }}
             </template>
-            <template slot="total_pagar" slot-scope="row">
+            <template v-slot:cell(total_pagar)="row">
                 ${{ row.item.total_pagar | formatNumber }}
             </template>
-            <template slot="actions" slot-scope="row">
-                <b-button v-if="role_id != 7 && (row.item.total_pagar == row.item.total)" 
+            <template v-slot:cell(actions)="row">
+                <b-button v-if="row.item.total_pagar == row.item.total" 
                     pill size="sm" variant="primary" @click="moveRemisione(row.item)">
                     <i class="fa fa-exchange"></i>
                 </b-button>
             </template>
-            <template v-if="showTitle" slot="thead-top" slot-scope="row">
+            <template v-if="showTitle" #thead-top="row">
                 <tr>
                     <th colspan="6" class="text-center">Remisiones</th>
                 </tr>
@@ -47,7 +47,7 @@ import setCortes from '../../../mixins/setCortes';
 import toast from '../../../mixins/toast';
 export default {
     components: { AlertVComponent, SelectCorteComponent },
-    props: ['remisiones', 'showTitle', 'role_id'],
+    props: ['remisiones', 'showTitle'],
     mixins: [formatNumber,setCortes,toast],
     data(){
         return {

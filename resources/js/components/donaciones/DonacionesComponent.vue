@@ -78,12 +78,12 @@
                 <b-table v-if="regalos.length > 0" responsive
                     hover :tbody-tr-class="rowClass"
                     :items="regalos" :fields="fields">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="created_at" slot-scope="row">{{ row.item.created_at | moment }}</template>
-                    <template slot="detalles" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(created_at)="row">{{ row.item.created_at | moment }}</template>
+                    <template v-slot:cell(detalles)="row">
                         <b-button variant="info" @click="detallesDonacion(row.item)">Detalles</b-button>
                     </template>
-                    <template slot="entregado_por" slot-scope="row">
+                    <template v-slot:cell(entregado_por)="row">
                         <b-button 
                             variant="warning" 
                             v-if="row.item.entregado_por === null && (role_id === 3 || role_id == 6)"
@@ -92,7 +92,7 @@
                             <i class="fa fa-frown-o"></i>
                         </b-button>
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>{{ total_unidades | formatNumber }}</th>
@@ -144,10 +144,10 @@
             </b-row>
             <h6 v-if="regalo.descripcion != null"><b>Descripción</b>: {{ regalo.descripcion }}</h6>
             <b-table :items="regalo.donaciones" :fields="fieldsD">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.libro.ISBN }}</template>
-                <template slot="titulo" slot-scope="row">{{ row.item.libro.titulo }}</template>
-                <template slot="thead-top" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.libro.ISBN }}</template>
+                <template v-slot:cell(titulo)="row">{{ row.item.libro.titulo }}</template>
+                <template #thead-top="row">
                     <tr>
                         <th colspan="3"></th>
                         <th>{{ regalo.unidades }}</th>
@@ -185,15 +185,15 @@
             </b-row>
             <hr>
             <b-table :items="regalo.donaciones" :fields="fieldsR">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="ISBN" slot-scope="row">{{ row.item.ISBN }}</template>
-                <template slot="titulo" slot-scope="row">{{ row.item.titulo }}</template>
-                <template slot="eliminar" slot-scope="row">
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(ISBN)="row">{{ row.item.ISBN }}</template>
+                <template v-slot:cell(titulo)="row">{{ row.item.titulo }}</template>
+                <template v-slot:cell(eliminar)="row">
                     <b-button variant="danger" @click="eliminarRegistro(row.index)">
                         <i class="fa fa-minus-circle"></i>
                     </b-button>
                 </template>
-                <template slot="thead-top" slot-scope="row">
+                <template #thead-top="row">
                         <tr>
                             <th colspan="1"></th>
                             <th>ISBN</th>
@@ -273,10 +273,10 @@
                     <b>Descripción: </b><label style="text-transform:uppercase;">{{ regalo.descripcion }}</label>
                 </label>
                 <b-table :items="regalo.donaciones" :fields="fieldsD">
-                    <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                    <template slot="ISBN" slot-scope="row">{{ row.item.ISBN }}</template>
-                    <template slot="titulo" slot-scope="row">{{ row.item.titulo }}</template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                    <template v-slot:cell(ISBN)="row">{{ row.item.ISBN }}</template>
+                    <template v-slot:cell(titulo)="row">{{ row.item.titulo }}</template>
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="3"></th>
                             <th>{{ regalo.unidades | formatNumber }}</th>
@@ -431,7 +431,6 @@
                     axios.put('/entrega_donacion', this.regalo).then(response => {
                         this.load = false;
                         this.regalos[this.position].entregado_por = response.data.entregado_por;
-                        this.$refs['modalMarcarDon'].hide();
                         this.makeToast('success', 'La donación ha sido marcada como entregada');
                     }).catch(error => {
                         this.load = false;

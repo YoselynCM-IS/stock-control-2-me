@@ -35,20 +35,20 @@
                     :current-page="currentPage"
                     :items="movimientos"
                     :fields="fieldsMov">
-                    <template slot="entradas" slot-scope="row">${{ row.item.entradas | formatNumber }}</template>
-                    <template slot="devoluciones" slot-scope="row">${{ row.item.devoluciones | formatNumber }}</template>
-                    <template slot="total_entrada" slot-scope="row">${{ row.item.total_entrada | formatNumber }}</template>
-                    <template slot="entdevoluciones" slot-scope="row">${{ row.item.entdevoluciones | formatNumber }}</template>
-                    <template slot="remisiones" slot-scope="row">${{ row.item.remisiones | formatNumber }}</template>
-                    <template slot="notas" slot-scope="row">${{ row.item.notas | formatNumber }}</template>
-                    <template slot="total_salida" slot-scope="row">${{ row.item.total_salida | formatNumber }}</template>
-                    <template slot="details" slot-scope="row">
+                    <template v-slot:cell(entradas)="row">${{ row.item.entradas | formatNumber }}</template>
+                    <template v-slot:cell(devoluciones)="row">${{ row.item.devoluciones | formatNumber }}</template>
+                    <template v-slot:cell(total_entrada)="row">${{ row.item.total_entrada | formatNumber }}</template>
+                    <template v-slot:cell(entdevoluciones)="row">${{ row.item.entdevoluciones | formatNumber }}</template>
+                    <template v-slot:cell(remisiones)="row">${{ row.item.remisiones | formatNumber }}</template>
+                    <template v-slot:cell(notas)="row">${{ row.item.notas | formatNumber }}</template>
+                    <template v-slot:cell(total_salida)="row">${{ row.item.total_salida | formatNumber }}</template>
+                    <template v-slot:cell(details)="row">
                         <b-button variant="info" @click="detailsMonto(row.item)">Detalles</b-button>
                     </template>
-                    <template slot="total" slot-scope="row">
+                    <template v-slot:cell(total)="row">
                         ${{ row.item.total | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="1"></th>
                             <th colspan="3" class="table-secondary text-center">ENTRADAS</th>
@@ -79,10 +79,10 @@
             <div v-if="libro.entradas.length > 0">
                 <h6><b>Entradas</b></h6>
                 <b-table :items="libro.entradas">
-                    <template slot="entradas" slot-scope="row">
+                    <template v-slot:cell(entradas)="row">
                         ${{ row.item.entradas | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>${{ total_entrada | formatNumber }}</th>
@@ -93,10 +93,10 @@
             <div v-if="libro.devoluciones.length > 0">
                 <h6><b>Devolución (Remisiones)</b></h6>
                 <b-table :items="libro.devoluciones">
-                    <template slot="devoluciones" slot-scope="row">
+                    <template v-slot:cell(devoluciones)="row">
                         ${{ row.item.devoluciones | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>${{ total_devolucion | formatNumber }}</th>
@@ -109,10 +109,10 @@
             <div v-if="libro.entdevoluciones.length > 0">
                 <h6><b>Devolución (Entradas)</b></h6>
                 <b-table :items="libro.entdevoluciones">
-                    <template slot="entdevoluciones" slot-scope="row">
+                    <template v-slot:cell(entdevoluciones)="row">
                         ${{ row.item.entdevoluciones | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>${{ total_entdevolucion | formatNumber }}</th>
@@ -123,10 +123,10 @@
             <div v-if="libro.remisiones.length > 0">
                 <h6><b>Remisiones</b></h6>
                 <b-table :items="libro.remisiones">
-                    <template slot="remisiones" slot-scope="row">
+                    <template v-slot:cell(remisiones)="row">
                         ${{ row.item.remisiones | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>${{ total_remision | formatNumber }}</th>
@@ -137,10 +137,10 @@
             <div v-if="libro.notas.length > 0">
                 <h6><b>Notas</b></h6>
                 <b-table :items="libro.notas">
-                    <template slot="notas" slot-scope="row">
+                    <template v-slot:cell(notas)="row">
                         ${{ row.item.notas | formatNumber }}
                     </template>
-                    <template slot="thead-top" slot-scope="row">
+                    <template #thead-top="row">
                         <tr>
                             <th colspan="2"></th>
                             <th>${{ total_nota | formatNumber }}</th>

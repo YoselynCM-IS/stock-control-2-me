@@ -24,11 +24,11 @@
             <!-- TABLA DE REMCLIENTES -->
             <b-table :items="remclientes" :fields="fieldsRClientes"
                     :per-page="perPage" :current-page="currentPage">
-                <template slot="index" slot-scope="row">{{ row.index + 1 }}</template>
-                <template slot="total" slot-scope="row">${{ row.item.total | formatNumber }}</template>
-                <template slot="total_devolucion" slot-scope="row">${{ row.item.total_devolucion | formatNumber }}</template>
-                <template slot="total_pagar" slot-scope="row">${{ row.item.total_pagar | formatNumber }}</template>
-                <template slot="total_pagos" slot-scope="row">${{ row.item.total_pagos | formatNumber }}</template>
+                <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
+                <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
+                <template v-slot:cell(total_devolucion)="row">${{ row.item.total_devolucion | formatNumber }}</template>
+                <template v-slot:cell(total_pagar)="row">${{ row.item.total_pagar | formatNumber }}</template>
+                <template v-slot:cell(total_pagos)="row">${{ row.item.total_pagos | formatNumber }}</template>
                 <template #row-details="row">
                     <b-card>
                         <b-list-group>

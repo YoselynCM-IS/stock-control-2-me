@@ -36,16 +36,16 @@
                         :items="remisiones" :fields="fields"
                         :tbody-tr-class="rowClass" id="my-table" 
                         :per-page="perPage" :current-page="currentPage">
-                <!-- <template slot="total" slot-scope="row">
+                <!-- <template v-slot:cell(total)="row">
                     ${{ row.item.total | formatNumber }}
                 </template>
-                <template slot="total_devolucion" slot-scope="row">
+                <template v-slot:cell(total_devolucion)="row">
                     ${{ row.item.total_devolucion | formatNumber }}
                 </template>
-                <template slot="pagos" slot-scope="row">
+                <template v-slot:cell(pagos)="row">
                     ${{ row.item.pagos | formatNumber }}
                 </template> -->
-                <template slot="remisiones" slot-scope="row">
+                <template v-slot:cell(remisiones)="row">
                     <div>
                         <p v-if="(row.item.total_pagar < row.item.all_total_pagar)">
                             Algunas remisiones ya han sido pagadas en su totalidad, se encuentran como pendientes debido a que algunos pagos han sido ingresados a la cuenta general del cliente.
@@ -62,7 +62,7 @@
                     <b-table v-if="row.item.remisiones.length > 0"
                         responsive hover :items="row.item.remisiones" 
                         :fields="fieldsRemisiones" :tbody-tr-class="rowClass">
-                        <template slot="total_pagar" slot-scope="data">
+                        <template v-slot:cell(total_pagar)="data">
                             ${{ data.item.total_pagar | formatNumber }}
                         </template>
                     </b-table>

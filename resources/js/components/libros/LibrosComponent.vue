@@ -71,13 +71,13 @@
             <!-- LISTADO DE LIBROS -->
             <b-table v-if="libros.length > 0" 
                     responsive :fields="fields" :items="libros">
-                <template  slot="piezas" slot-scope="data">
+                <template v-slot:cell(piezas)="data">
                     {{ data.item.piezas | formatNumber }}
                 </template>
-                <template  slot="defectuosos" slot-scope="data">
+                <template v-slot:cell(defectuosos)="data">
                     {{ data.item.defectuosos | formatNumber }}
                 </template>
-                <template slot="accion" slot-scope="data">
+                <template v-slot:cell(accion)="data">
                     <b-button v-if="role_id == 3 || role_id == 6" style="color:white;" variant="warning" v-b-modal.modal-editar @click="editarLibro(data.item, data.index)">
                         <i class="fa fa-pencil"></i>
                     </b-button>

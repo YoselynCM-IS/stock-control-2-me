@@ -31,10 +31,10 @@
             <!-- LISTADO DE CLIENTES -->
             <b-table v-if="clientes.length > 0"
                 responsive hover :items="clientes" :fields="fields">
-                <template slot="index" slot-scope="row">
+                <template v-slot:cell(index)="row">
                     {{ row.index + 1 }}
                 </template>
-                <template slot="editar" slot-scope="row">
+                <template v-slot:cell(editar)="row">
                     <b-button 
                         v-if="role_id === 2 || role_id == 6" 
                         v-b-modal.modal-editarCliente 
@@ -44,7 +44,7 @@
                         <i class="fa fa-pencil"></i>
                     </b-button>
                 </template>
-                <template slot="detalles" slot-scope="row">
+                <template v-slot:cell(detalles)="row">
                     <b-button variant="info" v-b-modal.modal-detalles @click="showDetails(row.item)">Detalles</b-button>
                 </template>
             </b-table>

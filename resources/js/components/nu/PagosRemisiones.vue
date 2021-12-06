@@ -4,10 +4,10 @@
             <b-form-select v-model="mes" :options="meses" @change="porMes()"></b-form-select>
         </div><br>
         <b-table :items="pagos" :fields="fieldsPagos">
-            <template slot="index" slot-scope="row">
+            <template v-slot:cell(index)="row">
                 {{ row.index + 1 }}
             </template>
-            <template slot="thead-top" slot-scope="row">
+            <template #thead-top="row">
                 <tr>
                     <th colspan="2"></th>
                     <th>${{ total_salida | formatNumber }}</th>
