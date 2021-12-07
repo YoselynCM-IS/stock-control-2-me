@@ -9,6 +9,10 @@ use App\Remisione;
 use App\Dato;
 use App\Exports\ClientesExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
+use App\Remcliente;
+use App\Cctotale;
+use App\Corte;
 
 class ClienteController extends Controller
 {
@@ -82,6 +86,29 @@ class ClienteController extends Controller
                 'direccion' => strtoupper($request->direccion),
                 'condiciones_pago' => strtoupper($request->condiciones_pago)
             ]);
+
+            Remcliente::create([
+                'cliente_id' => $cliente->id,
+                'total' => 0,
+                'total_pagar' => 0
+            ]);
+
+
+            $hoy = Carbon::now();
+            $month = $hoy->format('m');
+            
+            // CORTE B: 07 - 11 / CORTE A: 12 - 06 
+            $tipo = 'A';
+            if($month >= 7 && $month <= 11) $tipo = 'B';
+
+            $corte = Corte::whereTipo($tipo)
+                                ->get()->last();
+
+            Cctotale::create([
+                'corte_id' => $corte->id, 
+                'cliente_id' => $cliente->id
+            ]);
+
             \DB::commit();
         } catch (Exception $e) {
             \DB::rollBack();

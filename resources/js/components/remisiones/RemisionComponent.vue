@@ -387,7 +387,7 @@
                 if(this.remision.fecha_entrega != ''){
                     if(this.remision.datos.length > 0 || this.remision.nuevos.length > 0){
                         this.load = true;
-                        axios.get('/cortes/get_all').then(response => {
+                        axios.get('/cortes/list_bycliente', {params: {cliente_id: this.remision.cliente.id}}).then(response => {
                             this.options = this.setCortes(response.data, null);
                             this.state = true;
                             this.$refs['modal-confirmar-remision'].show();

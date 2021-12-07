@@ -24,6 +24,19 @@ class CorteController extends Controller
         return response()->json($cortes);
     }
 
+    // OBTENER CORTES DEL CLIENTE
+    public function list_bycliente(Request $request){
+        $cctotales = Cctotale::where('cliente_id', $request->cliente_id)
+                        ->select('corte_id')->get();
+        $ids = [];
+        $cctotales->map(function($cctotale) use(&$ids){
+            $ids[] = $cctotale->corte_id;
+        });
+        $cortes = Corte::whereIn('id', $ids)->orderBy('inicio', 'desc')
+                        ->get();
+        return response()->json($cortes);
+    }
+
     // Obtener detalles de un corte
     public function show(Request $request){
         $cctotales = Cctotale::where('corte_id', $request->corte_id)
