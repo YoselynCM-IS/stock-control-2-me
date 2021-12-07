@@ -1,9 +1,3 @@
-<!-- <li>
-	<a class="nav-link" href="{{ route('oficina.remisiones') }}">{{ __("Remisiones") }}</a>
-</li>
-<li>
-	<a class="nav-link" href="{{ route('oficina.fecha-adeudo') }}">{{ __("Adeudos") }}</a>
-</li> -->
 <li class="nav-item dropdown">
 	<a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
 		Remisiones <span class="caret"></span>
@@ -13,7 +7,7 @@
 			{{ __('Remisiones') }}
 		</a>
 		<a class="dropdown-item" href="{{ route('oficina.cerrar') }}">
-			{{ __('Cerrar remisiones') }}
+			{{ __('Devoluciones / Cerrar') }}
 		</a>
 		<a class="dropdown-item" href="{{ route('oficina.fecha-adeudo') }}">
 			{{ __('Fecha de adeudos') }}
