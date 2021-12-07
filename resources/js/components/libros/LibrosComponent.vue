@@ -61,7 +61,7 @@
                 <!-- AGREGAR UN NUEVO LIBRO -->
                 <b-button 
                     variant="success" 
-                    v-if="role_id === 3 || role_id == 6" 
+                    v-if="role_id === 2 || role_id === 3 || role_id == 6" 
                     v-b-modal.modal-newLibro>
                     <i class="fa fa-plus"></i> Nuevo libro
                 </b-button>
@@ -78,7 +78,9 @@
                     {{ data.item.defectuosos | formatNumber }}
                 </template>
                 <template v-slot:cell(accion)="data">
-                    <b-button v-if="role_id == 3 || role_id == 6" style="color:white;" variant="warning" v-b-modal.modal-editar @click="editarLibro(data.item, data.index)">
+                    <b-button v-if="role_id === 2 || role_id == 3 || role_id == 6" 
+                        style="color:white;" variant="warning" 
+                        v-b-modal.modal-editar @click="editarLibro(data.item, data.index)">
                         <i class="fa fa-pencil"></i>
                     </b-button>
                 </template>
