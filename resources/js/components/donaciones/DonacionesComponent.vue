@@ -86,7 +86,7 @@
                     <template v-slot:cell(entregado_por)="row">
                         <b-button 
                             variant="warning" 
-                            v-if="row.item.entregado_por === null && (role_id === 3 || role_id == 6)"
+                            v-if="row.item.entregado_por === null && (role_id === 2 || role_id === 3 || role_id == 6)"
                             :disabled="load"
                             v-on:click="marcarEntrega(row.item, row.index)">
                             <i class="fa fa-frown-o"></i>
@@ -105,7 +105,7 @@
                 </div>
                 <!-- MODALS -->
                 <!-- ELEGIR RESPONSABLE DE LA ENTREGA -->
-                <b-modal ref="modalMarcarDon" title="Responsable de la entrega">
+                <b-modal v-model="marcarDon" title="Responsable de la entrega">
                     <b-row>
                         <b-col sm="8">
                             <b-form-select :state="stateResp" v-model="regalo.entregado_por" :options="options"></b-form-select>
@@ -304,8 +304,10 @@
 </template>
 
 <script>
+import setResponsables from '../../mixins/setResponsables'
     export default {
-        props: ['role_id', 'listresponsables'],
+        props: ['role_id'],
+        mixins: [setResponsables],
         data() {
             return {
                 regalosData: {},
@@ -363,7 +365,8 @@
                 total_unidades: 0,
                 options: [],
                 stateResp: null,
-                position: null
+                position: null,
+                marcarDon: false
             }
         },
         filters: {
@@ -376,7 +379,6 @@
         },
         created: function(){
             this.getResults();
-            this.assign_responsables();
         },
         methods: {
             // OBTENER TODAS LAS DONACIONES
@@ -396,32 +398,25 @@
                     this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
                 });
             },
-            assign_responsables(){
-                if(this.role_id === 3 || this.role_id == 6){
-                    this.options.push({
-                        value: null,
-                        text: 'Selecciona una opción',
-                        disabled: true
-                    });
-                    this.listresponsables.forEach(responsable => {
-                        this.options.push({
-                            value: responsable.responsable,
-                            text: responsable.responsable
-                        });
-                    });
-                }
-            },
             rowClass(item, type) {
                 if (!item) return
                 if (item.entregado_por !== null) return 'table-success'
             },
             // INICIALIZAR PARA MARCAR LA ENTREGA DE LA DONACIÓN
             marcarEntrega(regalo, i){
-                this.regalo.id = regalo.id;
-                this.regalo.entregado_por = null;
-                this.position = i;
-                this.stateResp = null;
-                this.$refs['modalMarcarDon'].show();
+                this.load = true;
+                this.options = [];
+                axios.get('/remisiones/get_responsables').then(response => {
+                    this.options = this.assign_responsables(this.options, response.data);
+                    this.regalo.id = regalo.id;
+                    this.regalo.entregado_por = null;
+                    this.position = i;
+                    this.stateResp = null;
+                    this.marcarDon = true;
+                    this.load = false;
+                }).catch(error => {
+                    this.load = false;
+                });
             },
             // GUARDAR EL RESPONSABLE DE LA ENTREGA
             guardarEntrega(){

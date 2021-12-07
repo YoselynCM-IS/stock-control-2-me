@@ -40,14 +40,12 @@ class AlmacenController extends Controller
 
     public function promociones(){
         $promotions = Promotion::with('departures')->orderBy('folio','desc')->get();
-        $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
-        return view('almacen.promociones', compact('promotions', 'responsables'));
+        return view('almacen.promociones', compact('promotions'));
     }
 
     public function donaciones(){
         $regalos = Regalo::orderBy('id','desc')->get();
-        $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
-        return view('almacen.donaciones', compact('regalos', 'responsables'));
+        return view('almacen.donaciones', compact('regalos'));
     }
 
     public function entradas(){

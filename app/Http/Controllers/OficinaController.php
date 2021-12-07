@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Enteditoriale;
 use App\Remisione;
+use App\Promotion;
 use App\Entrada;
 use App\Cliente;
 use App\Compra;
@@ -27,6 +28,11 @@ class OficinaController extends Controller
         // $compras = Compra::orderBy('id','desc')->get();
         $pedidos = Order::orderBy('created_at', 'desc')->get();
         return view('oficina.pedidos', compact('pedidos'));
+    }
+
+    public function promociones(){
+        $promotions = Promotion::with('departures')->orderBy('folio','desc')->get();
+        return view('oficina.promociones', compact('promotions', ''));
     }
 
     public function donaciones(){

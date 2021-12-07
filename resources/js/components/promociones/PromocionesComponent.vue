@@ -86,7 +86,8 @@
                     </a>
                 </b-col>
                 <b-col sm="3" class="text-right">
-                    <b-button v-if="role_id == 3 || role_id == 6" variant="success" @click="registrarPromocion()">
+                    <b-button v-if="role_id == 2 || role_id == 3 || role_id == 6" 
+                        variant="success" @click="registrarPromocion()">
                         <i class="fa fa-plus"></i> Registrar promoción
                     </b-button>
                 </b-col>
@@ -316,8 +317,10 @@
 </template>
 
 <script>
+import setResponsables from '../../mixins/setResponsables'
     export default {
         props: ['role_id', 'registersall', 'listresponsables'],
+        mixins: [setResponsables],
         data() {
             return {
                 listadoPromociones: true,
@@ -393,24 +396,8 @@
         },
         mounted: function(){
             this.acumular_unidades();
-            this.assign_responsables();
         },
         methods: {
-            assign_responsables(){
-                if(this.role_id === 3 || this.role_id == 6){
-                    this.options.push({
-                        value: null,
-                        text: 'Selecciona una opción',
-                        disabled: true
-                    });
-                    this.listresponsables.forEach(responsable => {
-                        this.options.push({
-                            value: responsable.responsable,
-                            text: responsable.responsable
-                        });
-                    });
-                }
-            },
             // BUSQUEDA POR FECHA
             porFecha(){
                 if(this.final != '0000-00-00'){
@@ -461,21 +448,29 @@
             },
             // INICIALIZAR PARA CREAR UNA PROMOCIÓN
             registrarPromocion(){
-                this.listadoPromociones = false;
-                this.eliminarTemporal();
-                this.promocion = {
-                    id: null,
-                    folio: '',
-                    plantel: '',
-                    descripcion: '',
-                    unidades: 0,
-                    created_at: '',
-                    departures: [],
-                    entregado_por: null
-                };
-                this.state = null;
-                this.registros = [];
-                this.mostrarRegistrar = true;
+                this.load = true;
+                this.options = [];
+                axios.get('/remisiones/get_responsables').then(response => {
+                    this.options = this.assign_responsables(this.options, response.data);
+                    this.listadoPromociones = false;
+                    this.eliminarTemporal();
+                    this.promocion = {
+                        id: null,
+                        folio: '',
+                        plantel: '',
+                        descripcion: '',
+                        unidades: 0,
+                        created_at: '',
+                        departures: [],
+                        entregado_por: null
+                    };
+                    this.state = null;
+                    this.registros = [];
+                    this.mostrarRegistrar = true;
+                    this.load = false;
+                }).catch(error => {
+                    this.load = false;
+                });
             },
             // MOSTRAR DETALLES DE LA PROMOCIÓN
             detallesPromotion(promotion){

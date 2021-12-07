@@ -72,6 +72,8 @@ Route::name('oficina.')->prefix('oficina')->middleware(['auth', 'role:Oficina'])
     Route::name('entradas.')->prefix('entradas')->group(function () {
         Route::get('/pagos', 'OficinaController@entradas_pagos')->name('pagos');
     });
+    
+    Route::get('/promociones', 'OficinaController@promociones')->name('promociones');
 });
 
 // CAPTURA

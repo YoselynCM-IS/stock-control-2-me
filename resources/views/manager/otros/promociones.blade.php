@@ -3,6 +3,5 @@
 @section('content')
     <promociones-component 
         :role_id="{{auth()->user()->role_id}}" 
-        :registersall="{{$promotions}}"
-        :listresponsables="{{$responsables}}"></promociones-component>
+        :registersall="{{$promotions}}"></promociones-component>
 @endsection

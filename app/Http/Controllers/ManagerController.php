@@ -64,14 +64,12 @@ class ManagerController extends Controller
 
     public function promociones(){
         $promotions = Promotion::with('departures')->orderBy('folio','desc')->get();
-        $responsables = $this->get_responsables();
-        return view('manager.otros.promociones', compact('promotions', 'responsables'));
+        return view('manager.otros.promociones', compact('promotions'));
     }
 
     public function donaciones(){
         $regalos = Regalo::orderBy('id','desc')->get();
-        $responsables = $this->get_responsables();
-        return view('manager.otros.donaciones', compact('regalos', 'responsables'));
+        return view('manager.otros.donaciones', compact('regalos'));
     }
 
     public function lista_entradas(){
