@@ -984,5 +984,10 @@ class RemisionController extends Controller
                     ])->withCount('depositos')->first(); 
         return view('information.remisiones.details-remision', compact('remision'));
     }
+
+    public function get_responsables(){
+        $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
+        return response()->json($responsables);
+    }
     
 }

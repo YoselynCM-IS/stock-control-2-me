@@ -16,8 +16,7 @@ use App\Order;
 class AlmacenController extends Controller
 {
     public function remisiones(){;
-        $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
-        return view('almacen.remisiones', compact('responsables'));
+        return view('almacen.remisiones');
     }
 
     public function pagos(){ 

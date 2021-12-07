@@ -138,6 +138,8 @@ Route::name('remisiones.')->prefix('remisiones')->group(function () {
     Route::get('/ce_remision/{remisione_id}/{editar}', 'RemisionController@ce_remision')->name('ce_remision');
     // ABRIR PAGINA PARA OBTENER DETALLES DE REMSION
     Route::get('/details/{id}', 'RemisionController@get_details')->name('details');
+    // OBTENER LOS RESPONSABLES
+    Route::get('/get_responsables', 'RemisionController@get_responsables')->name('get_responsables');
 });
 
 //Buscar remision

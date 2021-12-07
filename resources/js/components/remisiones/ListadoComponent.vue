@@ -146,9 +146,6 @@
                             ${{ row.item.total_pagar | formatNumber }}
                         </template>
                         <template v-slot:cell(detalles)="row">
-                            <!-- <b-button variant="info" @click="detallesRemision(row.item)">
-                                Detalles
-                            </b-button> -->
                             <b-button :href="`/remisiones/details/${row.item.id}`" 
                                 target="blank" variant="info">
                                 Detalles
@@ -157,40 +154,17 @@
                         <template v-slot:cell(responsable)="row">
                             <b-button
                                 @click="selectResponsable(row.item, row.index)"
-                                v-if="(role_id === 3 || role_id == 6) && row.item.responsable === null && row.item.estado !== 'Cancelado'"
+                                v-if="(role_id === 2 || role_id === 3 || role_id == 6) && row.item.responsable === null && row.item.estado !== 'Cancelado'"
                                 variant="warning"><i class="fa fa-frown-o"></i>
                             </b-button>
                         </template>
                         <template v-slot:cell(editar)="row">
-                            <!-- <b-button 
-                                variant="warning" 
-                                v-if="(role_id === 2 || role_id == 6) && row.item.updated_at === row.item.created_at && row.item.total_pagar === row.item.total && row.item.estado !== 'Cancelado'" 
-                                @click="editarRemision(row.item, row.index)"
-                                style="color: white;">
-                                <i class="fa fa-edit"></i>
-                            </b-button> -->
                             <b-button v-if="(role_id === 2 || role_id == 6) && row.item.updated_at === row.item.created_at && row.item.total_pagar === row.item.total && row.item.estado !== 'Cancelado'"
                                 variant="warning" style="color: white;" target="blank"
                                 :href="`/remisiones/ce_remision/${row.item.id}/${true}`">
                                 <i class="fa fa-edit"></i>
                             </b-button>
                         </template>
-                        <!-- ENCABEZADO DE TOTALES -->
-                        <!-- <template #thead-top="row" v-if="role_id != 3">
-                            <tr>
-                                <th colspan="3"></th>
-                                <th>${{ total_salida | formatNumber }}</th>
-                                <th>${{ total_pagos | formatNumber }}</th>
-                                <th>${{ total_devolucion | formatNumber }}</th>
-                                <th>${{ total_pagar | formatNumber }}</th>
-                            </tr>
-                        </template> -->
-                        <!-- <template #table-busy>
-                            <div class="text-center text-info my-2">
-                                <b-spinner class="align-middle"></b-spinner>
-                                <strong>Cargando...</strong>
-                            </div>
-                        </template> -->
                     </b-table>
                     <b-alert v-else show variant="secondary">
                         <i class="fa fa-warning"></i> No se encontraron registros.
@@ -226,9 +200,12 @@
 </template>
 
 <script>
+    import formatNumber from '../../mixins/formatNumber';
+    import rowClass from '../../mixins/rowClass';
     moment.locale('es');
     export default {
         props: ['role_id', 'listresponsables'],
+        mixins: [formatNumber,rowClass],
         data() {
             return {
                 clientes: [],
@@ -356,16 +333,12 @@
             }
         },
         mounted: function(){
-            this.assign_responsables();
             this.getResults();
         },
         filters: {
             moment: function (date) {
                 return moment(date).format('DD-MM-YYYY');
             },
-            formatNumber: function (value) {
-                return numeral(value).format("0,0[.]00"); 
-            }
         },
         methods: {
             // OBTENER REMISIONES POR PAGINA
@@ -467,22 +440,6 @@
                 this.sTFecha = tFecha;
                 this.sTEstado = tEstado;
             },
-            // LISTA DE RESPONSABLES
-            assign_responsables(){
-                if(this.role_id === 3 || this.role_id == 6){
-                    this.optionsR.push({
-                        value: null,
-                        text: 'Selecciona una opción',
-                        disabled: true
-                    });
-                    this.listresponsables.forEach(responsable => {
-                        this.optionsR.push({
-                            value: responsable.responsable,
-                            text: responsable.responsable
-                        });
-                    });
-                }
-            },
             // // INICIALIZAR PARA NUEVA REMISIÓN
             // nuevaRemision(){
             //     axios.get('/getTodo').then(response => {
@@ -532,11 +489,29 @@
             //     }
             // },
             selectResponsable(remision, i){
-                this.stateResp = null;
-                this.responsableRem.remision_id = remision.id;
-                this.responsableRem.responsable = null;
-                this.responsableRem.posicion = i;
-                this.$refs['modalMarcarE'].show();
+                this.load = true;
+                this.optionsR = [];
+                axios.get('/remisiones/get_responsables').then(response => {
+                    this.optionsR.push({
+                        value: null,
+                        text: 'Selecciona una opción',
+                        disabled: true
+                    });
+                    response.data.forEach(responsable => {
+                        this.optionsR.push({
+                            value: responsable.responsable,
+                            text: responsable.responsable
+                        });
+                    });
+                    this.stateResp = null;
+                    this.responsableRem.remision_id = remision.id;
+                    this.responsableRem.responsable = null;
+                    this.responsableRem.posicion = i;
+                    this.$refs['modalMarcarE'].show();
+                    this.load = false;
+                }).catch(error => {
+                    this.load = false;
+                });
             },
             // ASIGNAR RESPONSABLE DE LA REMISIÓN
             assignResponsable(){
@@ -675,13 +650,6 @@
             //         this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
             //     });
             // },
-            rowClass(item, type) {
-                if (!item) return
-                if (item.estado == 'Iniciado') return 'table-secondary'
-                if (item.estado == 'Cancelado') return 'table-danger'
-                if (item.total_pagar == 0 && (item.pagos > 0 || item.total_devolucion > 0)) return 'table-success'
-                if (item.total_pagar < 0 && (item.pagos > 0 || item.total_devolucion > 0)) return 'table-warning'
-            },
             // acumular(){
             //     this.total_salida = 0;
             //     this.total_devolucion = 0;
