@@ -25,30 +25,12 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => '2019-06-10 00:00:00',
             ],
             2 => [
-                'id'        => 3,
-                'rol'      => 'Almacen',
-                'created_at' => '2019-06-10 00:00:00',
-                'updated_at' => '2019-06-10 00:00:00',
-            ],
-            3 => [
-                'id'        => 4,
-                'rol'      => 'Contador',
-                'created_at' => '2020-02-06 00:00:00',
-                'updated_at' => '2020-02-06 00:00:00',
-            ],
-            4 => [
-                'id'        => 5,
-                'rol'      => 'Captura',
-                'created_at' => '2020-07-18 00:00:00',
-                'updated_at' => '2020-07-18 00:00:00',
-            ],
-            5 => [
                 'id'        => 6,
                 'rol'      => 'manager',
                 'created_at' => '2021-04-29 00:00:00',
                 'updated_at' => '2021-04-29 00:00:00',
             ],
-            6 => [
+            3 => [
                 'id'        => 7,
                 'rol'      => 'visitor'
             ]

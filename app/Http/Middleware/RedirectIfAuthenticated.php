@@ -24,9 +24,7 @@ class RedirectIfAuthenticated
             if(Auth::user()->role_id == 2){
                 return redirect('/oficina/remisiones');
             }
-            if(Auth::user()->role_id == 3){
-                return redirect('/almacen/remisiones');
-            }
+            // if(Auth::user()->role_id == 3){ }
             if(Auth::user()->role_id == 4){
                 return redirect('/contador/remisiones');
             }

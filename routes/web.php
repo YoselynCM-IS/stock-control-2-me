@@ -82,19 +82,6 @@ Route::name('captura.')->prefix('captura')->middleware(['auth', 'role:Captura'])
     Route::get('/remisiones', 'CapturaController@remisiones')->name('remisiones');
 });
 
-// ALMACEN
-Route::name('almacen.')->prefix('almacen')->middleware(['auth', 'role:Almacen'])->group(function () {
-    Route::get('/pagos', 'AlmacenController@pagos')->name('pagos');
-    Route::get('/remisiones', 'AlmacenController@remisiones')->name('remisiones');
-    Route::get('/notas', 'AlmacenController@notas')->name('notas');
-    Route::get('/promociones', 'AlmacenController@promociones')->name('promociones');
-    Route::get('/entradas', 'AlmacenController@entradas')->name('entradas');
-    Route::get('/libros', 'AlmacenController@libros')->name('libros');
-    Route::get('/pedidos', 'AlmacenController@pedidos')->name('pedidos');
-    Route::get('/donaciones', 'AlmacenController@donaciones')->name('donaciones');
-    Route::get('/movimientos', 'AlmacenController@movimientos')->name('movimientos');
-});
-
 // VISITOR
 Route::name('visitor.')->prefix('visitor')->middleware(['auth', 'role:visitor'])->group(function () {
     Route::get('/remisiones', 'VisitorController@remisiones')->name('remisiones');

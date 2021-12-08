@@ -24,9 +24,7 @@ class RoleMiddleware
         if(auth()->user()->role_id === 2){
             return redirect()->route('oficina.remisiones');
         }
-        if(auth()->user()->role_id === 3){
-            return redirect()->route('almacen.remisiones');
-        }
+        // if(auth()->user()->role_id === 3){ }
         if(auth()->user()->role_id === 4){
             return redirect()->route('contador.remisiones');
         }
