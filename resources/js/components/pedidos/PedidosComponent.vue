@@ -221,7 +221,7 @@
                         pill :disabled="load" @click="openCancelar = true">
                         <i class="fa fa-close"></i> Cancelar
                     </b-button>
-                    <b-button v-if="pedido.status == 'espera' && (role_id == 3 || role_id == 6)" variant="primary" 
+                    <b-button v-if="pedido.status == 'espera' && role_id == 6" variant="primary" 
                         pill @click="act_status()" :disabled="load">
                         <i class="fa fa-refresh"></i> Actualizar estado
                     </b-button>

@@ -107,10 +107,6 @@ Vue.component('details-pagos-component', require('./components/cortes/pagos/Deta
 Vue.component('check-connection-component', require('./components/funciones/CheckConnectionComponent.vue').default);
 Vue.component('load-component', require('./components/funciones/LoadComponent.vue').default);
 
-
-/** NO UTLIZADOS */
-Vue.component('compras-component', require('./components/nu/ComprasComponent.vue').default);
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

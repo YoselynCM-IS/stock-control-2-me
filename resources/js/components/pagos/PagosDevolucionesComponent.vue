@@ -64,14 +64,14 @@
                     <template v-slot:cell(total_pagar)="row">${{ row.item.total_pagar | formatNumber }}</template>
                     <template v-slot:cell(registrar_pago)="row">
                         <b-button 
-                            v-if="row.item.total_pagar > 0 && (role_id == 3 || role_id == 6)"
+                            v-if="row.item.total_pagar > 0 && role_id == 6"
                             variant="primary" 
                             @click="registrarPago(row.item, row.index)">Pago
                         </b-button>
                     </template>
                     <template v-slot:cell(registrar_devolucion)="row">
                         <b-button 
-                            v-if="row.item.total_pagar > 0 && (role_id == 2 || role_id == 3 || role_id == 6)" 
+                            v-if="row.item.total_pagar > 0 && (role_id == 2 || role_id == 6)" 
                             variant="dark" 
                             @click="registrarDevolucion(row.item, row.index)">Devolución
                         </b-button>

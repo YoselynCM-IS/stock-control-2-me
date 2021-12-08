@@ -111,11 +111,7 @@
                         </a>
                     </b-col>
                     <b-col sm="3" class="text-right">
-                        <!-- <b-button v-if="role_id === 2 || role_id === 5 || role_id == 6" 
-                        variant="success" @click="nuevaRemision()" :disabled="load">
-                            <i class="fa fa-plus"></i> Crear remisión
-                        </b-button> -->
-                        <b-button v-if="role_id === 2 || role_id === 5 || role_id == 6" 
+                        <b-button v-if="role_id === 2 || role_id == 6" 
                             variant="success" :disabled="load" target="blank" 
                             :href="`/remisiones/ce_remision/${0}/${false}`">
                             <i class="fa fa-plus"></i> Crear remisión
@@ -154,7 +150,7 @@
                         <template v-slot:cell(responsable)="row">
                             <b-button
                                 @click="selectResponsable(row.item, row.index)"
-                                v-if="(role_id === 2 || role_id === 3 || role_id == 6) && row.item.responsable === null && row.item.estado !== 'Cancelado'"
+                                v-if="(role_id === 2 || role_id == 6) && row.item.responsable === null && row.item.estado !== 'Cancelado'"
                                 variant="warning"><i class="fa fa-frown-o"></i>
                             </b-button>
                         </template>

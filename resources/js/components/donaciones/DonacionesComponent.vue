@@ -61,7 +61,7 @@
                         <i class="fa fa-download"></i> General
                     </a>
                     <a 
-                        v-if="regalos.length > 0 && role_id !== 3"
+                        v-if="regalos.length > 0"
                         class="btn btn-dark"
                         :href="'/download_donacion/' + queryPlantel + '/' + inicio + '/' + final + '/detallado'">
                         <i class="fa fa-download"></i> Detallado
@@ -86,7 +86,7 @@
                     <template v-slot:cell(entregado_por)="row">
                         <b-button 
                             variant="warning" 
-                            v-if="row.item.entregado_por === null && (role_id === 2 || role_id === 3 || role_id == 6)"
+                            v-if="row.item.entregado_por === null && (role_id === 2 || role_id == 6)"
                             :disabled="load"
                             v-on:click="marcarEntrega(row.item, row.index)">
                             <i class="fa fa-frown-o"></i>

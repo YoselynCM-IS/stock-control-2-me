@@ -61,7 +61,7 @@
                 <!-- AGREGAR UN NUEVO LIBRO -->
                 <b-button 
                     variant="success" 
-                    v-if="role_id === 2 || role_id === 3 || role_id == 6" 
+                    v-if="role_id === 2 || role_id == 6" 
                     v-b-modal.modal-newLibro>
                     <i class="fa fa-plus"></i> Nuevo libro
                 </b-button>
@@ -78,7 +78,7 @@
                     {{ data.item.defectuosos | formatNumber }}
                 </template>
                 <template v-slot:cell(accion)="data">
-                    <b-button v-if="role_id === 2 || role_id == 3 || role_id == 6" 
+                    <b-button v-if="role_id === 2 || role_id == 6" 
                         style="color:white;" variant="warning" 
                         v-b-modal.modal-editar @click="editarLibro(data.item, data.index)">
                         <i class="fa fa-pencil"></i>
@@ -120,7 +120,7 @@
             <p>
                 Si alguna editorial esta activa en la búsqueda por editorial se descargará la lista de libros relacionados a esta en formato EXCEL.
             </p>
-            <div v-if="role_id === 3">
+            <div>
                 <h5 id="titleA"><b>Nuevo libro</b></h5>
                 <p>Puede agregar un libro proporcionando el Titulo, ISBN, Autor y Editorial.</p>
                 <h5 id="titleA"><b>Editar libro</b></h5>

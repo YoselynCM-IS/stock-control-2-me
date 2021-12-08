@@ -209,12 +209,7 @@ class EntradaController extends Controller
         $entrada = Entrada::whereId($id)->with(['registros.libro', 'repayments'])->first();
         $data['entrada'] = $entrada;
 
-        if(auth()->user()->role_id === 3){
-            $pdf = PDF::loadView('download.pdf.entradas.entrada-unidades', $data); 
-        }
-        else{
-            $pdf = PDF::loadView('download.pdf.entradas.entrada-costos', $data); 
-        }
+        $pdf = PDF::loadView('download.pdf.entradas.entrada-costos', $data); 
         
         return $pdf->download('entrada-'.$id.'.pdf');
     }
