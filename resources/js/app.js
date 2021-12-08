@@ -110,8 +110,6 @@ Vue.component('load-component', require('./components/funciones/LoadComponent.vu
 
 /** NO UTLIZADOS */
 Vue.component('compras-component', require('./components/nu/ComprasComponent.vue').default);
-Vue.component('pagos-remisiones', require('./components/nu/PagosRemisiones.vue').default);
-
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

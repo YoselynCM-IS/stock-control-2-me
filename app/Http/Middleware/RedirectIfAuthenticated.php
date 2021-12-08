@@ -25,9 +25,7 @@ class RedirectIfAuthenticated
                 return redirect('/oficina/remisiones');
             }
             // if(Auth::user()->role_id == 3){ }
-            if(Auth::user()->role_id == 4){
-                return redirect('/contador/remisiones');
-            }
+            // if(Auth::user()->role_id == 4){ }
             // if(Auth::user()->role_id == 5){ }
             if(Auth::user()->role_id == 6){
                 return redirect('/manager/remisiones/lista');

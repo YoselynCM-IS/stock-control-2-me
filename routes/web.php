@@ -48,15 +48,6 @@ Route::name('administrador.')->prefix('administrador')->middleware(['auth', 'rol
     Route::get('/majestic', 'AdministradorController@majestic')->name('majestic');
 });
 
-// CONTADOR
-Route::name('contador.')->prefix('contador')->middleware(['auth', 'role:Contador'])->group(function () {
-    Route::get('/remisiones', 'ContadorController@remisiones')->name('remisiones');
-    Route::get('/pagos', 'ContadorController@pagos')->name('pagos');
-    Route::get('/obtenerPagos', 'ContadorController@obtenerPagos')->name('obtenerPagos');
-    Route::get('/pagosFecha', 'ContadorController@pagosFecha')->name('pagosFecha');
-    Route::get('/movimientos_monto', 'ContadorController@movimientos_monto')->name('movimientos_monto');
-});
-
 // OFICINA
 Route::name('oficina.')->prefix('oficina')->middleware(['auth', 'role:Oficina'])->group(function () {
     Route::get('/remisiones', 'OficinaController@remisiones')->name('remisiones');
