@@ -31,7 +31,7 @@ class EntradaController extends Controller
                 'unidades' => $request->unidades,
             ]);
 
-            $unidades = $this->save_registros($request->items, $entrada);
+            $unidades = $this->save_registros($request->registros, $entrada);
             
             $entrada->update(['unidades' => $unidades]);
             $get_entrada = Entrada::whereId($entrada->id)->first();
@@ -327,7 +327,7 @@ class EntradaController extends Controller
         try {
             $total = 0;
             $lista_entdevoluciones = [];
-            $items = collect($request->items);
+            $items = collect($request->registros);
             $items->map(function($item) use(&$lista_entdevoluciones, $entrada, &$total){
                 $unidades_base = (int) $item['unidades_base'];
                 $total_base = (double) $item['total_base'];

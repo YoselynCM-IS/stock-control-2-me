@@ -77,9 +77,10 @@ class LibroController extends Controller
     public function isbn_por_editorial(){
         $isbn = Input::get('isbn');
         $editorial = Input::get('editorial');
-        $libro = Libro::where('ISBN', $isbn)->where('editorial','like','%'.$editorial.'%')->first();
-        $datos = $this->assign_registers($libro);
-        return response()->json($datos);
+        $libros = Libro::where('ISBN','like','%'.$isbn.'%')
+                    ->where('editorial', $editorial)
+                    ->orderBy('ISBN', 'asc')->get();
+        return response()->json($libros);
     }
 
     public function assign_registers($libro){

@@ -73,17 +73,15 @@
                         <i class="fa fa-download"></i> Detallado
                     </b-button>
                 </b-col>
+                <b-col sm="3" class="text-right">
+                    <b-button variant="success" @click="nuevaEntrada()"><i class="fa fa-plus"></i> Nueva entrada</b-button>
+                </b-col>
             </b-row>
             <!-- LISTADO DE ENTRADAS -->
-            <b-table 
-                responsive
-                v-if="!mostrarDetalles && !mostrarEA && entradas.length > 0" 
-                :items="entradas" 
-                :fields="fields"
-                :tbody-tr-class="rowClass"
-                :per-page="perPage"
-                :current-page="currentPage"
-                id="my-table">
+            <b-table v-if="entradas.length > 0" responsive 
+                :items="entradas" :fields="fields"
+                :tbody-tr-class="rowClass" id="my-table"
+                :per-page="perPage" :current-page="currentPage">
                 <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
                 <template v-slot:cell(total)="row">
                     <div v-if="row.item.folio != '05'">
@@ -108,19 +106,16 @@
                     {{ row.item.created_at | moment }}
                 </template>
                 <template v-slot:cell(editar)="row">
-                    <b-button 
+                    <b-button v-if="(role_id == 2 || role_id == 6) && row.item.total == 0"
                         @click="editarEntrada(row.item, row.index)"
-                        v-if="(role_id == 2 || role_id == 6) && row.item.total == 0 && row.item.folio != '05'"
-                        style="color:white;"
-                        variant="warning"> <i class="fa fa-pencil"></i>
+                        style="color:white;" variant="warning"> 
+                        <i class="fa fa-pencil"></i>
                     </b-button>
-                    <!-- <b-button 
-                        v-b-modal.modal-registrarPago
-                        @click="registrarPago(row.item, row.index)"
-                        variant="primary" 
-                        v-if="row.item.total > 0 && row.item.total_pagos < row.item.total && role_id == 2">
-                        Registrar pago
-                    </b-button> -->
+                    <b-button
+                        v-if="(role_id == 2 || role_id == 6) && row.item.total > 0 && ((row.item.total - (row.item.total_pagos + row.item.total_devolucion)) > 0)"
+                        @click="registrarDevolucion(row.item, row.index)"
+                        variant="primary">Devolución
+                    </b-button>
                 </template>
                 <template #thead-top="row">
                     <tr>
@@ -217,7 +212,7 @@
             </b-modal>
         </div>
         <!-- AGREGAR COSTOS A LOS DATOS DE LA ENTRADA -->
-        <div v-if="mostrarEA">
+        <div v-if="mostrarAddCostos">
             <b-row>
                 <b-col sm="3">
                     <label><b>Folio:</b> {{entrada.folio}}</label><br>
@@ -235,7 +230,7 @@
                     </b-button>
                 </b-col>
                 <b-col sm="2" class="text-right">
-                    <b-button variant="secondary" @click="mostrarEA = false; listadoEntradas = true;"><i class="fa fa-mail-reply"></i> Regresar</b-button>
+                    <b-button variant="secondary" @click="mostrarAddCostos = false; listadoEntradas = true;"><i class="fa fa-mail-reply"></i> Regresar</b-button>
                 </b-col>
             </b-row>
             <hr>
@@ -300,30 +295,16 @@
                 </div>
             </b-modal>
         </div>
+        <!-- NUEVA REMISION-->
+        <div v-if="mostrarAdd">
+            <add-edit-entrada :agregar="agregar" :form="form" 
+                :editoriales="editoriales" @goBack="goBack"></add-edit-entrada>
+        </div>
+        <!-- AGREGAR DEVOLUCION -->
+        <div v-if="mostrarDevolucion">
+            <devolucion-entrada :form="formDev"></devolucion-entrada>
+        </div>
         <!-- MODALS -->
-        <!-- MODAL PARA REGISTRAR PAGO -->
-        <!-- <b-modal id="modal-registrarPago" title="Registrar pago">
-            <b-form @submit.prevent="guardarVendidos()">
-                <b-row>
-                    <b-col sm="2">
-                        <label>Monto</label>
-                    </b-col>
-                    <b-col sm="5">
-                        <b-form-input v-model="repayment.pago" autofocus :state="state" :disabled="load" required></b-form-input>
-                    </b-col>
-                    <b-col>
-                        <b-button type="submit" variant="success" :disabled="load">
-                            <i class="fa fa-check"></i> {{ !load ? 'Guardar' : 'Guardando' }} <b-spinner small v-if="load"></b-spinner>
-                        </b-button>
-                    </b-col>
-                </b-row>
-            </b-form>
-            <div slot="modal-footer">
-                <b-alert show variant="info">
-                    <i class="fa fa-exclamation-circle"></i> Verificar el pago antes de presionar <b>Guardar</b>, ya que después no se podrán realizar cambios.
-                </b-alert>
-            </div>
-        </b-modal> -->
         <!-- MODAL DE AYUDA-->
         <b-modal id="modal-ayudaEG" hide-backdrop hide-footer title="Ayuda">
             <h5 id="titleA"><b>Búsqueda por folio</b></h5>
@@ -343,7 +324,10 @@
 </template>
 
 <script>
+import AddEditEntrada from './partials/AddEditEntrada.vue';
+import DevolucionEntrada from './partials/DevolucionEntrada.vue';
     export default {
+    components: { AddEditEntrada, DevolucionEntrada },
         props: ['role_id', 'registersall', 'editoriales'],
         data() {
             return {
@@ -404,7 +388,7 @@
                     entrada_id: 0,
                     pago: null
                 },
-                mostrarEA: false,
+                mostrarAddCostos: false,
                 resultslibros: [],
                 unidades: 0,
                 load: false,
@@ -423,7 +407,18 @@
                 stateDate: null,
                 folio: '',
                 total_unidades: 0,
-                entdevoluciones: []
+                entdevoluciones: [],
+                agregar: false,
+                form: {
+                    id: 0,
+                    unidades: 0,
+                    folio: null,
+                    editorial: null,
+                    registros: []
+                },
+                mostrarAdd: false,
+                mostrarDevolucion: false,
+                formDev: {}
             }
         },
         created: function(){
@@ -529,7 +524,7 @@
                         this.asignar(response);
                         this.subtotal = 0;
                         this.total_unidades = this.entrada.unidades;
-                        this.mostrarEA = true; 
+                        this.mostrarAddCostos = true; 
                     } else {
                         this.makeToast('warning', 'La entrada ya fue editada. Actualizar la pagina para visualizar cambios.');
                     }
@@ -553,7 +548,7 @@
                     this.entradas[this.posicion].total = response.data.total;
                     this.acumular();
                     this.load = false;
-                    this.mostrarEA = false;
+                    this.mostrarAddCostos = false;
                     this.listadoEntradas = true;
                 }).catch(error => {
                     this.load = false;
@@ -656,6 +651,43 @@
                     variant: variant,
                     solid: true
                 })
+            },
+            // INICIALIZAR PARA CREAR UNA ENTRADA
+            nuevaEntrada(){
+                this.listadoEntradas = false;
+                this.agregar = true;
+                this.form = {
+                    id: 0,
+                    unidades: 0,
+                    folio: null,
+                    editorial: null,
+                    registros: []
+                };
+                this.mostrarAdd = true;
+            },
+            goBack(){
+                this.listadoEntradas = true;
+                this.agregar = false;
+                this.mostrarAdd = false;
+            },
+            registrarDevolucion(entrada, index){
+                axios.get('/detalles_entrada', {params: {entrada_id: entrada.id}}).then(response => {
+                    this.listadoEntradas = false;
+                    this.mostrarDevolucion = true;
+                    this.formDev.id = response.data.entrada.id;
+                    this.formDev.folio = response.data.entrada.folio;
+                    this.formDev.editorial = response.data.entrada.editorial;
+                    this.formDev.total = response.data.entrada.total;
+                    this.formDev.unidades = response.data.entrada.unidades;
+                    this.formDev.total_devolucion = response.data.entrada.total_devolucion;
+                    this.formDev.created_at = response.data.entrada.created_at;
+                    this.formDev.registros = response.data.entrada.registros;
+                    this.formDev.entdevoluciones = response.data.entdevoluciones;
+                    this.formDev.todo_total = 0;
+                    this.formDev.todo_unidades = 0;
+                }).catch(error => {
+                    this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
+                });
             }
         }
     }
