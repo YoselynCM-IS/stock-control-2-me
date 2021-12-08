@@ -50,6 +50,9 @@
 		<a class="dropdown-item" href="{{ route('oficina.donaciones') }}">
 			{{ __('Donaciones') }}
 		</a>
+		<a class="dropdown-item" href="{{ route('oficina.notas') }}">
+			{{ __('Notas') }}
+		</a>
 	</div>
 </li>
 @include('partials.navigations.logged')

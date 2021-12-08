@@ -13,6 +13,7 @@ use App\Libro;
 use App\Regalo;
 use App\Remcliente;
 use App\Order;
+use App\Note;
 
 class OficinaController extends Controller
 {
@@ -78,5 +79,10 @@ class OficinaController extends Controller
         $editoriales = Enteditoriale::orderBy('editorial', 'asc')
                         ->withCount('entdepositos')->get();
         return view('oficina.entradas.pagos', compact('editoriales'));
+    }
+
+    public function notas(){
+        $notes = Note::orderBy('folio','desc')->get();
+        return view('oficina.notas', compact('notes'));
     }
 }

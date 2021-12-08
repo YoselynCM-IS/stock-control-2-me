@@ -26,8 +26,7 @@ class AlmacenController extends Controller
 
     public function notas(){
         $notes = Note::orderBy('folio','desc')->get();
-        $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
-        return view('almacen.notas', compact('notes', 'responsables'));
+        return view('almacen.notas', compact('notes'));
     }
 
     public function pedidos(){

@@ -53,8 +53,7 @@ class ManagerController extends Controller
     // NOTAS
     public function notas(){
         $notes = Note::orderBy('folio','desc')->get();
-        $responsables = $this->get_responsables();
-        return view('manager.otros.notas', compact('notes', 'responsables'));
+        return view('manager.otros.notas', compact('notes'));
     }
 
     public function pedidos(){
