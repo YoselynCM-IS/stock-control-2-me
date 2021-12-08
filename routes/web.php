@@ -77,11 +77,6 @@ Route::name('oficina.')->prefix('oficina')->middleware(['auth', 'role:Oficina'])
     Route::get('/notas', 'OficinaController@notas')->name('notas');
 });
 
-// CAPTURA
-Route::name('captura.')->prefix('captura')->middleware(['auth', 'role:Captura'])->group(function () {
-    Route::get('/remisiones', 'CapturaController@remisiones')->name('remisiones');
-});
-
 // VISITOR
 Route::name('visitor.')->prefix('visitor')->middleware(['auth', 'role:visitor'])->group(function () {
     Route::get('/remisiones', 'VisitorController@remisiones')->name('remisiones');

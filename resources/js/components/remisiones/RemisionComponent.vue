@@ -657,7 +657,6 @@
             goRuta(){
                 let ruta = '#';
                 if(this.role_id == 2) ruta = '/oficina/remisiones'; // OFICINA
-                if(this.role_id == 5) ruta = '/captura/remisiones'; // CAPTURA
                 if(this.role_id == 6) ruta = '/manager/remisiones/lista'; // MANAGER
                 window.opener.document.location=`${ruta}`;
             }
