@@ -12,28 +12,32 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         \DB::table('roles')->insert([
-            0 => [
-                'id'        => 1,
-                'rol'      => 'Administrador',
-                'created_at' => '2019-06-10 00:00:00',
-                'updated_at' => '2019-06-10 00:00:00',
-            ],
-            1 => [
-                'id'        => 2,
-                'rol'      => 'Oficina',
-                'created_at' => '2019-06-10 00:00:00',
-                'updated_at' => '2019-06-10 00:00:00',
-            ],
-            2 => [
-                'id'        => 6,
-                'rol'      => 'manager',
-                'created_at' => '2021-04-29 00:00:00',
-                'updated_at' => '2021-04-29 00:00:00',
-            ],
-            3 => [
-                'id'        => 7,
-                'rol'      => 'visitor'
-            ]
+            // 0 => [
+            //     'id'        => 1,
+            //     'rol'      => 'Administrador',
+            //     'created_at' => '2019-06-10 00:00:00',
+            //     'updated_at' => '2019-06-10 00:00:00',
+            // ],
+            // 1 => [
+            //     'id'        => 2,
+            //     'rol'      => 'Oficina',
+            //     'created_at' => '2019-06-10 00:00:00',
+            //     'updated_at' => '2019-06-10 00:00:00',
+            // ],
+            // 2 => [
+            //     'id'        => 5,
+            //     'rol'      => 'captura'
+            // ],
+            // 3 => [
+            //     'id'        => 6,
+            //     'rol'      => 'manager',
+            //     'created_at' => '2021-04-29 00:00:00',
+            //     'updated_at' => '2021-04-29 00:00:00',
+            // ],
+            // 4 => [
+            //     'id'        => 7,
+            //     'rol'      => 'visitor'
+            // ]
         ]);
 
         \DB::table('users')->insert([

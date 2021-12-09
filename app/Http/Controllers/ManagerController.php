@@ -102,9 +102,7 @@ class ManagerController extends Controller
     }
 
     public function get_entradas(){
-        return Entrada::with('registros')
-            ->whereNotIn('editorial', ['MAJESTIC EDUCATION'])
-            ->orderBy('id','desc')->get();
+        return Entrada::with('registros')->orderBy('id','desc')->get();
     }
 
     public function get_editoriales(){

@@ -4,8 +4,8 @@
 <div class="container" style="margin-top: 150px;">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card text-white bg-dark">
-                <div class="card-header text-center">{{ __('Iniciar sesión') }}</div>
+            <div class="card border-dark">
+                <div class="card-header bg-dark text-white text-center">{{ __('Iniciar sesión') }}</div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
@@ -52,7 +52,7 @@
                             </div>
                         </div>
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-light">
+                            <button type="submit" class="btn btn-dark">
                                 {{ __('Acceder') }}
                             </button>
                         </div>

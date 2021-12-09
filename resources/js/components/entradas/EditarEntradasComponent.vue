@@ -73,9 +73,9 @@
                         <i class="fa fa-download"></i> Detallado
                     </b-button>
                 </b-col>
-                <b-col sm="3" class="text-right">
+                <!-- <b-col sm="3" class="text-right">
                     <b-button variant="success" @click="nuevaEntrada()"><i class="fa fa-plus"></i> Nueva entrada</b-button>
-                </b-col>
+                </b-col> -->
             </b-row>
             <!-- LISTADO DE ENTRADAS -->
             <b-table v-if="entradas.length > 0" responsive 

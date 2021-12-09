@@ -97,9 +97,9 @@ class ClienteController extends Controller
             $hoy = Carbon::now();
             $month = $hoy->format('m');
             
-            // CORTE B: 07 - 11 / CORTE A: 12 - 06 
-            $tipo = 'A';
-            if($month >= 7 && $month <= 11) $tipo = 'B';
+            // CORTE A: 07 - 11 / CORTE B: 12 - 06 
+            $tipo = 'B';
+            if($month >= 7 && $month <= 11) $tipo = 'A';
 
             $corte = Corte::whereTipo($tipo)
                                 ->get()->last();

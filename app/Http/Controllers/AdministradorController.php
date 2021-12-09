@@ -41,8 +41,7 @@ class AdministradorController extends Controller
     }
 
     public function entradas(){
-        $entradas = Entrada::with('registros')
-            ->whereNotIn('editorial', ['MAJESTIC EDUCATION'])->orderBy('id','desc')->get();
+        $entradas = Entrada::with('registros')->orderBy('id','desc')->get();
         $editoriales = \DB::table('editoriales')->orderBy('editorial', 'asc')->get();
         return view('administrador.entradas', compact('entradas', 'editoriales'));
     }

@@ -163,8 +163,8 @@ class LibroController extends Controller
     public function update(Request $request){
         $libro = Libro::whereId($request->id)->first();
         if($request->ISBN !== $libro->ISBN || strtoupper($request->titulo) !== $libro->titulo){
-            $libro->ISBN = 'ISBN';
-            $libro->titulo = 'TITLE';
+            $libro->ISBN = 'ISBN-'.$libro->ISBN;
+            $libro->titulo = 'TITLE-'.$libro->titulo;
             $libro->save();     
             $this->func_validar($request);
         } else {
