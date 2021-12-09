@@ -2,7 +2,7 @@
     <div>
         <check-connection-component></check-connection-component>
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md">
                 <!-- BUSCAR LIBRO POR TITULO -->
                 <b-row>
                     <b-col sm="2"><label>Titulo</label></b-col>
@@ -15,7 +15,7 @@
                     </b-col>
                 </b-row>
             </div>
-            <div class="col-md-4">
+            <div class="col-md">
                 <!-- BUSCAR LIBRO POR ISBN -->
                 <b-row>
                     <b-col sm="2">
@@ -28,7 +28,7 @@
                 </b-row>
             </div>
             <!-- BUSCAR LIBROS POR EDITORIAL -->
-            <div class="col-md-4">
+            <div v-if="role_id !== 5" class="col-md">
                 <b-row>
                     <b-col sm="2">
                         <label for="input-cliente">Editorial</label>
@@ -173,7 +173,7 @@
         },
         created: function(){
             this.getResults();
-            this.assign_editorial();
+            if(this.role_id !== 5) this.assign_editorial();
         },
         filters: {
             formatNumber: function (value) {

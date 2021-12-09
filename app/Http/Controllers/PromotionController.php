@@ -46,16 +46,16 @@ class PromotionController extends Controller
             \DB::beginTransaction();
             $num = Promotion::get()->count() + 1;
             if($num < 10){
-                $folio = 'A-P000'.$num;
+                $folio = 'PROMO-000'.$num;
             }
             if($num >= 10 && $num < 100){
-                $folio = 'A-P00'.$num;
+                $folio = 'PROMO-00'.$num;
             }
             if($num >= 100 && $num < 1000){
-                $folio = 'A-P0'.$num;
+                $folio = 'PROMO-0'.$num;
             }
             if($num >= 1000 && $num < 10000){
-                $folio = 'A-P'.$num;
+                $folio = 'PROMO-'.$num;
             }
             $promotion = Promotion::create([
                 'folio' => $folio,

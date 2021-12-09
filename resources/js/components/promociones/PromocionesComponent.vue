@@ -86,7 +86,7 @@
                     </a>
                 </b-col>
                 <b-col sm="3" class="text-right">
-                    <b-button v-if="role_id == 2 || role_id == 6" 
+                    <b-button v-if="role_id == 2 || role_id == 5 || role_id == 6" 
                         variant="success" @click="registrarPromocion()">
                         <i class="fa fa-plus"></i> Registrar promoción
                     </b-button>
@@ -319,7 +319,7 @@
 <script>
 import setResponsables from '../../mixins/setResponsables'
     export default {
-        props: ['role_id', 'registersall', 'listresponsables'],
+        props: ['role_id', 'registersall'],
         mixins: [setResponsables],
         data() {
             return {

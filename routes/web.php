@@ -1,5 +1,6 @@
 <?php
 
+use App\Promotion;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -66,6 +67,25 @@ Route::name('oficina.')->prefix('oficina')->middleware(['auth', 'role:Oficina'])
     
     Route::get('/promociones', 'OficinaController@promociones')->name('promociones');
     Route::get('/notas', 'OficinaController@notas')->name('notas');
+});
+
+Route::name('captura.')->prefix('captura')->middleware(['auth', 'role:captura'])->group(function () {
+    // Route::get('/remisiones', 'OficinaController@remisiones')->name('remisiones');
+    // Route::get('/donaciones', 'OficinaController@donaciones')->name('donaciones');
+    // Route::get('/promociones', 'OficinaController@promociones')->name('promociones');
+    Route::get('/remisiones', function () {
+        return view('captura.remisiones');
+    })->name('remisiones');
+    Route::get('/donaciones', function () {
+        return view('captura.donaciones');
+    })->name('donaciones');
+    Route::get('/promociones', function () {
+        $promotions = Promotion::with('departures')->orderBy('folio','desc')->get();
+        return view('captura.promociones', compact('promotions'));
+    })->name('promociones');
+    Route::get('/libros', function () {
+        return view('captura.libros');
+    })->name('libros');
 });
 
 // VISITOR

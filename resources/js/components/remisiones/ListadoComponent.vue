@@ -90,7 +90,7 @@
                             <span slot="next-nav"><i class="fa fa-angle-right"></i></span>
                         </pagination>
                     </b-col>
-                    <b-col align="right">
+                    <b-col align="right" v-if="role_id === 1 || role_id === 2 || role_id == 6">
                         <a 
                             v-if="remisiones.length > 0 && num_remision === null"
                             class="btn btn-dark"

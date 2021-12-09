@@ -67,8 +67,7 @@ class ManagerController extends Controller
     }
 
     public function donaciones(){
-        $regalos = Regalo::orderBy('id','desc')->get();
-        return view('manager.otros.donaciones', compact('regalos'));
+        return view('manager.otros.donaciones');
     }
 
     public function lista_entradas(){

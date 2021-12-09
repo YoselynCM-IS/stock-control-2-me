@@ -65,7 +65,6 @@ class VisitorController extends Controller
 
     // OBTENER DONACIONES
     public function donaciones(){
-        $regalos = Regalo::orderBy('id','desc')->get();
-        return view('visitor.donaciones', compact('regalos'));
+        return view('visitor.donaciones');
     }
 }

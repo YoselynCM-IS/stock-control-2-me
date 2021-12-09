@@ -61,14 +61,14 @@
                         <i class="fa fa-download"></i> General
                     </a>
                     <a 
-                        v-if="regalos.length > 0"
+                        v-if="regalos.length > 0 && (role_id == 2 || role_id == 6)"
                         class="btn btn-dark"
                         :href="'/download_donacion/' + queryPlantel + '/' + inicio + '/' + final + '/detallado'">
                         <i class="fa fa-download"></i> Detallado
                     </a>
                 </b-col>
                 <b-col sm="3" class="text-right">
-                    <b-button v-if="role_id == 2 || role_id == 6" variant="success" @click="registrarDonacion()">
+                    <b-button v-if="role_id == 2 || role_id == 5 || role_id == 6" variant="success" @click="registrarDonacion()">
                         <i class="fa fa-plus"></i> Registrar donación
                     </b-button>
                 </b-col>
@@ -77,7 +77,7 @@
                 <!-- LISTADO DE DONACIONES -->
                 <b-table v-if="regalos.length > 0" responsive
                     hover :tbody-tr-class="rowClass"
-                    :items="regalos" :fields="fields">
+                    :items="regalos" :fields="fields" class="mt-3">
                     <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
                     <template v-slot:cell(created_at)="row">{{ row.item.created_at | moment }}</template>
                     <template v-slot:cell(detalles)="row">
@@ -86,7 +86,7 @@
                     <template v-slot:cell(entregado_por)="row">
                         <b-button 
                             variant="warning" 
-                            v-if="row.item.entregado_por === null && (role_id === 2 || role_id == 6)"
+                            v-if="row.item.entregado_por === null && (role_id === 2 || role_id == 5 || role_id == 6)"
                             :disabled="load"
                             v-on:click="marcarEntrega(row.item, row.index)">
                             <i class="fa fa-frown-o"></i>

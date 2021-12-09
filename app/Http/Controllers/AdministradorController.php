@@ -65,8 +65,7 @@ class AdministradorController extends Controller
     }
 
     public function donaciones(){
-        $regalos = Regalo::orderBy('id','desc')->get();
-        return view('administrador.donaciones', compact('regalos'));
+        return view('administrador.donaciones');
     }
 
     public function clientes(){

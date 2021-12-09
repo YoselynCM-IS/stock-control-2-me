@@ -37,8 +37,7 @@ class OficinaController extends Controller
     }
 
     public function donaciones(){
-        $regalos = Regalo::orderBy('id','desc')->get();
-        return view('oficina.donaciones', compact('regalos'));
+        return view('oficina.donaciones');
     }
     
     public function entradas(){

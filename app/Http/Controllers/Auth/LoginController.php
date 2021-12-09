@@ -47,7 +47,9 @@ class LoginController extends Controller
         }
         // if(auth()->user()->role_id == 3){ }
         // if(auth()->user()->role_id == 4){ }
-        // if(auth()->user()->role_id == 5){ }
+        if(auth()->user()->role_id == 5){ 
+            return '/captura/remisiones';
+        }
         if(auth()->user()->role_id == 6){
             return '/manager/remisiones/lista';
         }
