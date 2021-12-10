@@ -227,13 +227,13 @@
             <b-modal ref="modal-confirmar-remision" size="xl" title="Resumen de la remisión">
                 <b-row>
                     <b-col><p><b>Cliente:</b> {{ remision.cliente.name }}</p></b-col>
-                    <b-col sm="4">
+                    <!-- <b-col sm="4">
                         <b-form-group v-if="!editar" label="Temporada">
                             <b-form-select v-model="remision.corte_id" :options="options" required
                                 :disabled="load"
                             ></b-form-select>
                         </b-form-group>
-                    </b-col>
+                    </b-col> -->
                 </b-row>
                 <b-row>
                     <b-col><b>Fecha de entrega:</b> {{ remision.fecha_entrega }}</b-col>
@@ -280,7 +280,7 @@
                             </b-alert>
                         </b-col>
                         <b-col sm="2" align="right">
-                            <b-button v-if="!editar" :disabled="load || remision.corte_id == null" 
+                            <b-button v-if="!editar" :disabled="load" 
                                 @click="guardarRemision()" variant="success">
                                 <i class="fa fa-check"></i> Confirmar
                             </b-button>
@@ -386,16 +386,18 @@
             confirmarRemision() {
                 if(this.remision.fecha_entrega != ''){
                     if(this.remision.datos.length > 0 || this.remision.nuevos.length > 0){
-                        this.load = true;
-                        axios.get('/cortes/list_bycliente', {params: {cliente_id: this.remision.cliente.id}}).then(response => {
-                            this.options = this.setCortes(response.data, null);
-                            this.state = true;
-                            this.$refs['modal-confirmar-remision'].show();
-                            this.load = false;
-                        }).catch(error => {
-                            this.load = false;
-                            this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
-                        });
+                        this.state = true;
+                        this.$refs['modal-confirmar-remision'].show();
+                        // this.load = true;
+                        // axios.get('/cortes/list_bycliente', {params: {cliente_id: this.remision.cliente.id}}).then(response => {
+                        //     this.options = this.setCortes(response.data, null);
+                        //     this.state = true;
+                        //     this.$refs['modal-confirmar-remision'].show();
+                        //     this.load = false;
+                        // }).catch(error => {
+                        //     this.load = false;
+                        //     this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
+                        // });
                     } else {
                         this.makeToast('warning', 'Aun no se ha agregado un libro a la remisión.');
                     }
@@ -657,6 +659,7 @@
             goRuta(){
                 let ruta = '#';
                 if(this.role_id == 2) ruta = '/oficina/remisiones'; // OFICINA
+                if(this.role_id == 5) ruta = '/captura/remisiones'; // CAPTURA
                 if(this.role_id == 6) ruta = '/manager/remisiones/lista'; // MANAGER
                 window.opener.document.location=`${ruta}`;
             }

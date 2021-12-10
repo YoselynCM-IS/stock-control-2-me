@@ -22,6 +22,7 @@ use App\Vendido;
 use App\Cliente;
 use App\Libro;
 use App\Fecha;
+use App\Corte;
 use App\Dato;
 use App\Pago;
 use Excel;
@@ -479,12 +480,21 @@ class RemisionController extends Controller
     public function store(Request $request){
         \DB::beginTransaction();
         try {
-            $fecha_hoy = Carbon::now()->format('Y-m-d');
+            $hoy = Carbon::now();
+            $fecha_hoy = $hoy->format('Y-m-d');
+
+            $month = $hoy->format('m');
+            // CORTE A: 07 - 11 / CORTE B: 12 - 06 
+            $tipo = 'B';
+            if($month >= 7 && $month <= 11) $tipo = 'A';
+
+            $corte = Corte::whereTipo($tipo)->get()->last();
+            
             $total = (double) $request->total;
             // CREAR REMISIÓN
             $remision = Remisione::create([
                 'user_id' => auth()->user()->id,
-                'corte_id' => $request->corte_id,
+                'corte_id' => $corte->id,
                 'cliente_id' => $request->cliente['id'],
                 'total' => $total,
                 'total_pagar' => $total,
