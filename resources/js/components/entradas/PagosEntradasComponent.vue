@@ -24,7 +24,7 @@
                 ${{ row.item.total - (row.item.total_pagos + row.item.total_devolucion) | formatNumber }}
             </template>
             <template v-slot:cell(pagar)="row">
-                <b-button v-if="row.item.total > 0 && row.item.total_pendiente > 0 && (role_id === 2 || role_id == 6)" 
+                <b-button v-if="row.item.total > 0 && row.item.total_pendiente > 0 && (role_id === 1 || role_id == 2 || role_id == 6)" 
                     variant="primary" pill @click="registrarMonto(row.item)">
                     Realizar pago
                 </b-button>

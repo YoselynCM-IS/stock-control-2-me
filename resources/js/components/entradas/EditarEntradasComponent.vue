@@ -60,12 +60,12 @@
                         :href="`/downEntradasEXC/${inicio}/${final}/${editorial}/general`">
                         <i class="fa fa-download"></i> EXCEL
                     </b-button>
-                    <b-button
+                    <!-- <b-button
                         v-if="entradas.length > 0"
                         variant="dark"
                         :href="`/downEntradas/${inicio}/${final}/${editorial}`">
                         <i class="fa fa-download"></i> PDF
-                    </b-button>
+                    </b-button> -->
                     <b-button
                         v-if="entradas.length > 0"
                         variant="dark"

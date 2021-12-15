@@ -76,7 +76,7 @@
                         v-if="promotions.length > 0"
                         class="btn btn-dark"
                         :href="'/download_promotion/' + queryPlantel + '/' + inicio + '/' + final + '/general'">
-                        <i class="fa fa-download"></i> General
+                        <i class="fa fa-download"></i> Descargar
                     </a>
                     <a 
                         v-if="promotions.length > 0 && (role_id === 1 || role_id == 6)"

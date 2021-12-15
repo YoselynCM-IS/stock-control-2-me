@@ -58,7 +58,7 @@
                         v-if="regalos.length > 0"
                         class="btn btn-dark"
                         :href="'/download_donacion/' + queryPlantel + '/' + inicio + '/' + final + '/general'">
-                        <i class="fa fa-download"></i> General
+                        <i class="fa fa-download"></i> Descargar
                     </a>
                     <a 
                         v-if="regalos.length > 0 && (role_id == 2 || role_id == 6)"
@@ -426,6 +426,7 @@ import getLibros from '../../mixins/getLibros';
                     axios.put('/entrega_donacion', this.regalo).then(response => {
                         this.load = false;
                         this.regalos[this.position].entregado_por = response.data.entregado_por;
+                        this.marcarDon = false;
                         this.makeToast('success', 'La donación ha sido marcada como entregada');
                     }).catch(error => {
                         this.load = false;

@@ -75,7 +75,7 @@
                         v-if="notes.length > 0"
                         class="btn btn-dark"
                         :href="'/download_note/' + queryCliente + '/' + inicio + '/' + final + '/general'">
-                        <i class="fa fa-download"></i> General
+                        <i class="fa fa-download"></i> Descargar
                     </a>
                     <a 
                         v-if="notes.length > 0 && (role_id === 1 || role_id == 6)"
@@ -132,7 +132,7 @@
                 <template v-slot:cell(editar)="row">
                     <b-button
                         id="btnNotaE"
-                        v-if="(role_id == 2 || role_id == 6) && row.item.total_pagar > 0" 
+                        v-if="(role_id == 6) && row.item.total_pagar > 0" 
                         variant="warning"
                         @click="editarNota(row.item, row.index)"
                         ><i class="fa fa-pencil"></i></b-button>

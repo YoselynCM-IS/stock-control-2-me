@@ -66,7 +66,4 @@
 		<a class="dropdown-item" href="{{ route('administrador.donaciones') }}">{{ __("Donaciones") }}</a>
 	</div>
 </li>
-<li>
-	<a class="nav-link" href="{{ route('administrador.majestic') }}" target="_blank">{{ __("MAJESTIC") }}</a>
-</li>
 @include('partials.navigations.logged')

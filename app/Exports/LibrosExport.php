@@ -22,7 +22,6 @@ class LibrosExport implements FromCollection,WithHeadings{
     public function headings(): array
     {
         return [
-            // 'id',
             'isbn', 
             'titulo',
             'editorial',
@@ -35,12 +34,14 @@ class LibrosExport implements FromCollection,WithHeadings{
         if($this->editorial === 'TODO'){
             $libros = DB::table('libros')
                     ->select('isbn', 'titulo', 'editorial', 'piezas', 'defectuosos')
+                    ->where('estado', 'activo')
                     ->orderBy('editorial','asc')->get();
         }
         else{
             $libros = DB::table('libros')
                     ->select('isbn', 'titulo', 'editorial', 'piezas', 'defectuosos')
                     ->where('editorial', $this->editorial)
+                    ->where('estado', 'activo')
                     ->orderBy('titulo','asc')->get();
         }
         return $libros;

@@ -33,7 +33,7 @@ class OficinaController extends Controller
 
     public function promociones(){
         $promotions = Promotion::with('departures')->orderBy('folio','desc')->get();
-        return view('oficina.promociones', compact('promotions', ''));
+        return view('oficina.promociones', compact('promotions'));
     }
 
     public function donaciones(){
