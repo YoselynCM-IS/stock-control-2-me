@@ -7,11 +7,8 @@
 			{{ __('Remisiones') }}
 		</a>
 		<a class="dropdown-item" href="{{ route('administrador.pagos') }}">
-			{{ __('Registrar pago (General)') }}
+			{{ __('Pagos') }}
 		</a>
-		<!-- <a class="dropdown-item" href="{{ route('administrador.registrar_pago') }}">
-			{{ __('Registrar pago (Remisión)') }}
-		</a> -->
 		<a class="dropdown-item" href="{{ route('administrador.fecha-adeudo') }}">
 			{{ __('Fecha de adeudos') }}
 		</a>
