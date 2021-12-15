@@ -76,12 +76,6 @@ class ManagerController extends Controller
         return view('manager.entradas.lista', compact('entradas', 'editoriales'));
     }
 
-    public function lista_crear_entradas(){
-        $entradas = $this->get_entradas();
-        $editoriales = $this->get_editoriales();
-        return view('manager.entradas.lista-crear', compact('entradas', 'editoriales'));
-    }
-
     public function entradas_pagos(){
         $editoriales = Enteditoriale::orderBy('editorial', 'asc')
                         ->withCount('entdepositos')->get();
@@ -109,4 +103,7 @@ class ManagerController extends Controller
         return \DB::table('editoriales')->orderBy('editorial', 'asc')->get();
     }
 
+    public function entradas_salidas(){
+        return view('manager.movimientos.entradas-salidas');
+    }
 }

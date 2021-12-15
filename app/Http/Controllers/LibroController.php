@@ -21,8 +21,13 @@ class LibroController extends Controller
 {
     // MOSTRAR TODOS LOS LIBROS
     public function index(){
-        $libros = Libro::orderBy('editorial', 'asc')->paginate(20);
+        $libros = $this->all_libros_paginate();
         return response()->json($libros);
+    }
+
+    public function all_libros_paginate(){
+        return Libro::orderBy('editorial', 'asc')
+                        ->where('estado', 'activo')->paginate(20);
     }
 
     // MOSTRAR COINCIDENCIAS DE TITULO PAGINADO
@@ -31,6 +36,7 @@ class LibroController extends Controller
         $libros = \DB::table('libros')
                     ->select('id', 'ISBN', 'titulo', 'editorial', 'piezas', 'defectuosos')
                     ->where('titulo','like','%'.$titulo.'%')
+                    ->where('estado', 'activo')
                     ->orderBy('titulo', 'asc')->paginate(20);
         return response()->json($libros);
     }
@@ -41,6 +47,7 @@ class LibroController extends Controller
         $libros = \DB::table('libros')
                     ->select('id', 'ISBN', 'titulo', 'editorial', 'piezas', 'defectuosos')
                     ->where('ISBN','like','%'.$isbn.'%')
+                    ->where('estado', 'activo')
                     ->orderBy('titulo', 'asc')->paginate(20);
         return response()->json($libros);
     }
@@ -50,10 +57,11 @@ class LibroController extends Controller
     public function by_editorial(){
         $editorial = Input::get('editorial');
         if($editorial === 'TODO'){
-            $libros = Libro::orderBy('editorial', 'asc')->paginate(20);
+            $libros = $this->all_libros_paginate();
         }
         else{
             $libros = Libro::where('editorial','like','%'.$editorial.'%')
+                ->where('estado', 'activo')
                 ->orderBy('titulo', 'asc')->paginate(20);
         }
         return response()->json($libros);
@@ -69,6 +77,7 @@ class LibroController extends Controller
         $libros = \DB::table('libros')
                     ->select('id', 'ISBN', 'titulo', 'editorial', 'piezas', 'defectuosos')
                     ->where('ISBN','like','%'.$isbn.'%')
+                    ->where('estado', 'activo')
                     ->orderBy('titulo', 'asc')->get();
         // $datos = $this->assign_registers($libro);
         return response()->json($libros);
@@ -79,6 +88,7 @@ class LibroController extends Controller
         $editorial = Input::get('editorial');
         $libros = Libro::where('ISBN','like','%'.$isbn.'%')
                     ->where('editorial', $editorial)
+                    ->where('estado', 'activo')
                     ->orderBy('ISBN', 'asc')->get();
         return response()->json($libros);
     }
@@ -106,6 +116,7 @@ class LibroController extends Controller
         $libros = \DB::table('libros')
                     ->select('id', 'ISBN', 'titulo', 'editorial', 'piezas', 'defectuosos')
                     ->where('titulo','like','%'.$queryTitulo.'%')
+                    ->where('estado', 'activo')
                     ->orderBy('titulo', 'asc')->get();
         return response()->json($libros);
     }
@@ -117,6 +128,7 @@ class LibroController extends Controller
                     ->select('id', 'ISBN', 'titulo', 'editorial', 'piezas')
                     ->where('editorial','like','%'.$editorial.'%')
                     ->where('titulo','like','%'.$queryTitulo.'%')
+                    ->where('estado', 'activo')
                     ->orderBy('editorial', 'asc')->get();
         return response()->json($libros);
     }
@@ -210,6 +222,12 @@ class LibroController extends Controller
     // MOSTRAR MOVIMIENTOS DE UN LIBRO
     public function movimientos_todos(){
         $libros = $this->get_libros();
+        $movimientos = $this->busqueda_unidades($libros);
+        return response()->json($movimientos);
+    }
+
+    public function movimientos_libro(Request $request){
+        $libros = Libro::where('id', $request->libro_id)->get();
         $movimientos = $this->busqueda_unidades($libros);
         return response()->json($movimientos);
     }
@@ -764,5 +782,201 @@ class LibroController extends Controller
 
     public function download_movmonto($editorial, $mes){
         return Excel::download(new MovMontoExport($editorial, $mes), 'movimientos-monto.xlsx');
+    }
+
+    // MARCAR COMO INACTIVO EL LIBRO
+    public function inactivar(Request $request){
+        \DB::beginTransaction();
+        try {
+            Libro::whereId($request->libro_id)->update([
+                'estado' => 'inactivo'
+            ]);
+            \DB::commit();
+        } catch (Exception $e) {
+            \DB::rollBack();
+            return response()->json($exception->getMessage());
+        }
+        return response()->json(true);
+    }
+
+    // OBTENER ENTRADAS Y SALIDAS
+    public function entradas_salidas(Request $request){
+        $inicio = $request->de.' 00:00:00';
+        $final = $request->a.' 23:59:59';
+        // SALIDAS
+        $entradas = \DB::table('registros')
+                    ->join('entradas', 'registros.entrada_id', '=', 'entradas.id')
+                    ->join('libros', 'registros.libro_id', '=', 'libros.id')
+                    ->whereBetween('entradas.created_at', [$inicio, $final])
+                    ->select('registros.libro_id', 'registros.unidades')
+                    ->get();
+        $fechas = \DB::table('fechas')
+                    ->join('libros', 'fechas.libro_id', '=', 'libros.id')
+                    ->whereBetween('fechas.fecha_devolucion', [$inicio, $final])
+                    ->select('fechas.libro_id', 'fechas.unidades')
+                    ->get();
+        // ENTRADAS
+        $entdevoluciones = \DB::table('entdevoluciones')
+                    ->join('registros', 'entdevoluciones.registro_id', '=', 'registros.id')
+                    ->join('libros', 'registros.libro_id', '=', 'libros.id')
+                    ->whereBetween('entdevoluciones.created_at', [$inicio, $final])
+                    ->select('registros.libro_id', 'entdevoluciones.unidades')
+                    ->get();
+        $remisiones = \DB::table('datos')
+                    ->join('remisiones', 'datos.remisione_id', '=', 'remisiones.id')
+                    ->join('libros', 'datos.libro_id', '=', 'libros.id')
+                    ->whereBetween('remisiones.created_at', [$inicio, $final])
+                    ->select('datos.libro_id', 'datos.unidades')
+                    ->get();
+        $notas = \DB::table('registers')
+                    ->join('notes', 'registers.note_id', '=', 'notes.id')
+                    ->join('libros', 'registers.libro_id', '=', 'libros.id')
+                    ->whereBetween('notes.created_at', [$inicio, $final])
+                    ->select('registers.libro_id', 'registers.unidades')
+                    ->get();
+        $promociones = \DB::table('departures')
+                    ->join('promotions', 'departures.promotion_id', '=', 'promotions.id')
+                    ->join('libros', 'departures.libro_id', '=', 'libros.id')
+                    ->whereBetween('promotions.created_at', [$inicio, $final])
+                    ->select('departures.libro_id', 'departures.unidades')
+                    ->get();
+        $donaciones = \DB::table('donaciones')
+                    ->join('regalos', 'donaciones.regalo_id', '=', 'regalos.id')
+                    ->join('libros', 'donaciones.libro_id', '=', 'libros.id')
+                    ->whereBetween('regalos.created_at', [$inicio, $final])
+                    ->select('donaciones.libro_id', 'donaciones.unidades')
+                    ->get();
+
+        $ids = [];
+        $ids = $this->get_ids_libros($entradas, $ids);
+        $ids = $this->get_ids_libros($fechas, $ids);
+        $ids = $this->get_ids_libros($entdevoluciones, $ids);
+        $ids = $this->get_ids_libros($remisiones, $ids);
+        $ids = $this->get_ids_libros($notas, $ids);
+        $ids = $this->get_ids_libros($promociones, $ids);
+        $ids = $this->get_ids_libros($donaciones, $ids);
+        
+        $lista_datos = [];
+        $libros = Libro::whereIn('id', $ids)->orderBy('titulo', 'asc')->get();
+        $libros->map(function($libro) use(&$lista_datos, $entradas, $fechas, $entdevoluciones, $remisiones, $notas, $promociones, $donaciones){
+            $ter = $this->get_datos_libros($libro->id, $entradas);
+            $tdf = $this->get_datos_libros($libro->id, $fechas);
+            $ted = $this->get_datos_libros($libro->id, $entdevoluciones);
+            $trr = $this->get_datos_libros($libro->id, $remisiones);
+            $tnr = $this->get_datos_libros($libro->id, $notas);
+            $tpd = $this->get_datos_libros($libro->id, $promociones);
+            $trd = $this->get_datos_libros($libro->id, $donaciones);
+            
+            $datos = [
+                'id' => $libro->id,
+                'libro' => $libro->titulo,
+                'entradas' => $ter,
+                'devoluciones' => $tdf,
+                'entdevoluciones' => $ted,
+                'remisiones' => $trr,
+                'notas' => $tnr,
+                'promociones' => $tpd,
+                'donaciones' => $trd,
+                '_cellVariants' => [
+                    'entradas' => $ter > 0 ? 'success':'',
+                    'devoluciones' => $tdf > 0 ? 'success':'',
+                    'entdevoluciones' => $ted > 0 ? 'primary':'',
+                    'remisiones' => $trr > 0 ? 'primary':'',
+                    'notas' => $tnr > 0 ? 'primary':'',
+                    'promociones' => $tpd > 0 ? 'primary':'',
+                    'donaciones' => $trd > 0 ? 'primary':''
+                ]
+            ];
+            
+            $lista_datos[] = $datos;
+        });
+        return response()->json(collect($lista_datos));
+    }
+
+    // OBTENER DETALLES
+    public function details_entsal(Request $request){
+        $inicio = $request->de.' 00:00:00';
+        $final = $request->a.' 23:59:59';
+        $libro_id = $request->libro_id;
+        $libro = Libro::find($libro_id);
+        // SALIDAS
+        $entradas = \DB::table('registros')
+                    ->join('entradas', 'registros.entrada_id', '=', 'entradas.id')
+                    ->join('libros', 'registros.libro_id', '=', 'libros.id')
+                    ->where('registros.libro_id', $libro_id)
+                    ->whereBetween('entradas.created_at', [$inicio, $final])
+                    ->select('libros.titulo', 'entradas.folio as folio', 'registros.unidades', 'entradas.created_at')
+                    ->get();
+        $fechas = \DB::table('fechas')
+                    ->join('libros', 'fechas.libro_id', '=', 'libros.id')
+                    ->where('fechas.libro_id', $libro_id)
+                    ->whereBetween('fechas.fecha_devolucion', [$inicio, $final])
+                    ->select('libros.titulo', 'fechas.remisione_id as folio', 'fechas.unidades', 'fechas.fecha_devolucion')
+                    ->get();
+        // ENTRADAS
+        $entdevoluciones = \DB::table('entdevoluciones')
+                    ->join('registros', 'entdevoluciones.registro_id', '=', 'registros.id')
+                    ->join('entradas', 'registros.entrada_id', '=', 'entradas.id')
+                    ->join('libros', 'registros.libro_id', '=', 'libros.id')
+                    ->where('registros.libro_id', $libro_id)
+                    ->whereBetween('entdevoluciones.created_at', [$inicio, $final])
+                    ->select('libros.titulo', 'entradas.folio as folio', 'entdevoluciones.unidades', 'entdevoluciones.created_at')
+                    ->get();
+        $remisiones = \DB::table('datos')
+                    ->join('remisiones', 'datos.remisione_id', '=', 'remisiones.id')
+                    ->join('libros', 'datos.libro_id', '=', 'libros.id')
+                    ->where('datos.libro_id', $libro_id)
+                    ->whereBetween('remisiones.created_at', [$inicio, $final])
+                    ->select('libros.titulo', 'remisiones.id as folio', 'datos.unidades', 'remisiones.created_at')
+                    ->get();
+        $notas = \DB::table('registers')
+                    ->join('notes', 'registers.note_id', '=', 'notes.id')
+                    ->join('libros', 'registers.libro_id', '=', 'libros.id')
+                    ->where('registers.libro_id', $libro_id)
+                    ->whereBetween('notes.created_at', [$inicio, $final])
+                    ->select('libros.titulo', 'notes.folio as folio', 'registers.unidades', 'notes.created_at')
+                    ->get();
+        $promociones = \DB::table('departures')
+                    ->join('promotions', 'departures.promotion_id', '=', 'promotions.id')
+                    ->join('libros', 'departures.libro_id', '=', 'libros.id')
+                    ->where('departures.libro_id', $libro_id)
+                    ->whereBetween('promotions.created_at', [$inicio, $final])
+                    ->select('libros.titulo', 'promotions.folio as folio', 'departures.unidades', 'promotions.created_at')
+                    ->get();
+        $donaciones = \DB::table('donaciones')
+                    ->join('regalos', 'donaciones.regalo_id', '=', 'regalos.id')
+                    ->join('libros', 'donaciones.libro_id', '=', 'libros.id')
+                    ->where('donaciones.libro_id', $libro_id)
+                    ->whereBetween('regalos.created_at', [$inicio, $final])
+                    ->select('libros.titulo', 'regalos.plantel as folio', 'donaciones.unidades', 'regalos.created_at')
+                    ->get();
+
+        $lista_datos = [
+            'id' => $libro->id,
+            'libro' => $libro->titulo,
+            'entradas' => $entradas,
+            'devoluciones' => $fechas,
+            'entdevoluciones' => $entdevoluciones,
+            'remisiones' => $remisiones,
+            'notas' => $notas,
+            'promociones' => $promociones,
+            'donaciones' => $donaciones,
+        ];
+        return response()->json($lista_datos);
+    }
+
+    public function get_ids_libros($array, $ids){
+        $array->map(function($a) use(&$ids){
+            $ids[] = $a->libro_id;
+        });
+        return $ids;
+    }
+
+    public function get_datos_libros($libro_id, $array){
+        $dato = 0;
+        foreach ($array as $a) {
+            if($libro_id == $a->libro_id) $dato += $a->unidades;
+        }
+        return $dato;
     }
 }

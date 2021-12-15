@@ -47,6 +47,7 @@ Route::name('administrador.')->prefix('administrador')->middleware(['auth', 'rol
     Route::get('/comparativa', 'AdministradorController@comparativa')->name('comparativa');
 
     Route::get('/majestic', 'AdministradorController@majestic')->name('majestic');
+    Route::get('/entradas-salidas', 'AdministradorController@entradas_salidas')->name('entradas-salidas');
 });
 
 // OFICINA
@@ -408,6 +409,14 @@ Route::name('libro.')->prefix('libro')->group(function () {
     Route::get('/by_isbn', 'LibroController@by_isbn')->name('by_isbn');
     //Buscar libro por editorial
     Route::get('/by_editorial', 'LibroController@by_editorial')->name('by_editorial');
+    // OBTENER MOVIMIENTOS DEL LIBRO
+    Route::get('/movimientos_libro', 'LibroController@movimientos_libro')->name('movimientos_libro');
+    // MARCAR COMO INACTIVO EL LIBRO
+    Route::put('/inactivar', 'LibroController@inactivar')->name('inactivar');
+    // OBTENER ENTRADAS Y SALIDAS
+    Route::get('/entradas_salidas', 'LibroController@entradas_salidas')->name('entradas_salidas');
+    // OBTENER DETALLES DE ENTRADAS Y SALIDAS, DE UN LIBRO
+    Route::get('/details_entsal', 'LibroController@details_entsal')->name('details_entsal');
 });
 
 // PAGOS
@@ -469,6 +478,7 @@ Route::name('manager.')->prefix('manager')
     Route::name('movimientos.')->prefix('movimientos')->group(function () {
         Route::get('/clientes', 'ManagerController@movimientos_clientes')->name('clientes');
         Route::get('/libros', 'ManagerController@movimientos_libros')->name('libros');
+        Route::get('/entradas-salidas', 'ManagerController@entradas_salidas')->name('entradas-salidas');
     });
     Route::name('remisiones.')->prefix('remisiones')->group(function () {
         Route::get('/lista', 'ManagerController@lista_remisiones')->name('lista');
@@ -483,7 +493,6 @@ Route::name('manager.')->prefix('manager')
     });
     Route::name('entradas.')->prefix('entradas')->group(function () {
         Route::get('/lista', 'ManagerController@lista_entradas')->name('lista');
-        Route::get('/lista_crear', 'ManagerController@lista_crear_entradas')->name('lista_crear');
         Route::get('/pagos', 'ManagerController@entradas_pagos')->name('pagos');
     });
     Route::get('/libros', 'ManagerController@libros')->name('libros');

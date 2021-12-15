@@ -297,9 +297,10 @@
 
 <script>
     import setCortes from '../../mixins/setCortes';
+    import getLibros from '../../mixins/getLibros';
     export default {
         props: ['clientesall', 'editar', 'datoremision', 'role_id'],
-        mixins: [setCortes],
+        mixins: [setCortes,getLibros],
         data() {
             return {
                 load: false,
@@ -312,7 +313,6 @@
                 inputUnidades: false, //Mostrar o no el input de unidades
                 inputCosto: false, //Mostrar el input de costo
                 queryTitulo: '', //Buscar libro por titulo
-                resultslibros: [], //Mostrar resultados de la busqueda de libro
                 temporal: {}, //Guardar temporalmente los datos de la busqueda del libro
                 fecha: '', //seleccionar la fecha de fecha_entrega
                 bdremision: {
@@ -494,9 +494,7 @@
             // MOSTRAR LIBROS POR COINCIDENCIA
             mostrarLibros(){
                 if(this.queryTitulo.length > 0){
-                   axios.get('/mostrarLibros', {params: {queryTitulo: this.queryTitulo}}).then(response => {
-                        this.resultslibros = response.data;
-                    });
+                    this.getLibros(this.queryTitulo);
                 } 
                 else{
                     this.resultslibros = [];

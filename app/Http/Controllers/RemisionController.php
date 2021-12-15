@@ -539,13 +539,16 @@ class RemisionController extends Controller
     public function save_datos($req_datos, $remision){
         $lista_datos = [];
         $request_datos = collect($req_datos);
-        $request_datos->map(function($dato) use (&$lista_datos, $remision){
+        $hoy = Carbon::now();
+        $request_datos->map(function($dato) use (&$lista_datos, $remision, $hoy){
             $lista_datos[] = [
                 'remisione_id' => $remision->id,
                 'libro_id'  => $dato['libro']['id'],
                 'costo_unitario' => (float) $dato['costo_unitario'],
                 'unidades'  => (int) $dato['unidades'],
-                'total'     => (double) $dato['total']
+                'total'     => (double) $dato['total'],
+                'created_at' => $hoy,
+                'updated_at' => $hoy
             ];
         });
         
@@ -554,14 +557,16 @@ class RemisionController extends Controller
 
         $lista_devoluciones = [];
         $datos = Dato::where('remisione_id', $remision->id)->get();
-        $datos->map(function($dato) use(&$lista_devoluciones){
+        $datos->map(function($dato) use(&$lista_devoluciones, $hoy){
             $libro_id = $dato->libro_id;
             $lista_devoluciones[] = [
                 'remisione_id' => $dato->remisione_id,
                 'dato_id'   => $dato->id,
                 'libro_id' => $libro_id,
                 'unidades_resta' => $dato->unidades,
-                'total_resta' => $dato->total
+                'total_resta' => $dato->total,
+                'created_at' => $hoy,
+                'updated_at' => $hoy
             ];
 
             // DISMINUIR PIEZAS DE LOS LIBROS
@@ -716,7 +721,8 @@ class RemisionController extends Controller
             // NUEVOS
             $lista_devoluciones = [];
             $nuevos = collect($request->nuevos);
-            $nuevos->map(function($nuevo) use (&$lista_devoluciones, $remision){
+            $hoy = Carbon::now();
+            $nuevos->map(function($nuevo) use (&$lista_devoluciones, $remision, $hoy){
                 $libro_id = $nuevo['libro']['id'];
                 $unidades = (int) $nuevo['unidades'];
                 $total_nuevo = (double) $nuevo['total'];
@@ -735,7 +741,9 @@ class RemisionController extends Controller
                     'dato_id'   => $dato->id,
                     'libro_id' => $libro_id,
                     'unidades_resta' => $unidades,
-                    'total_resta' => $total_nuevo
+                    'total_resta' => $total_nuevo,
+                    'created_at' => $hoy,
+                    'updated_at' => $hoy
                 ];
 
                 // DISMINUIR PIEZAS DE LOS LIBROS

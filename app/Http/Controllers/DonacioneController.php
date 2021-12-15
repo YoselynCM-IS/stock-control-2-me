@@ -34,14 +34,17 @@ class DonacioneController extends Controller
 
             $lista_donaciones = [];
             $donaciones = collect($request->donaciones);
-            $donaciones->map(function($donacion) use(&$lista_donaciones, $regalo){
+            $hoy = Carbon::now();
+            $donaciones->map(function($donacion) use(&$lista_donaciones, $regalo, $hoy){
                 $unidades = $donacion['unidades'];
                 $libro_id = $donacion['id'];
 
                 $lista_donaciones[] = [
                     'regalo_id' => $regalo->id,
                     'libro_id' => $libro_id,
-                    'unidades' => $unidades
+                    'unidades' => $unidades,
+                    'created_at' => $hoy,
+                    'updated_at' => $hoy
                 ];
 
                 // DISMINUIR PIEZAS DE LOS LIBROS

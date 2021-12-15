@@ -28,7 +28,8 @@ class Libro extends Model
         'editorial', 
         'edicion', 
         'piezas',
-        'defectuosos'
+        'defectuosos',
+        'estado'
     ];
 
     //Uno a muchos

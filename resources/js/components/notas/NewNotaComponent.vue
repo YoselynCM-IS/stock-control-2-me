@@ -549,10 +549,11 @@
 </template>
 
 <script>
-import setResponsables from '../../mixins/setResponsables'
+import setResponsables from '../../mixins/setResponsables';
+import getLibros from '../../mixins/getLibros';
     export default {
         props: ['role_id', 'registersall', 'listresponsables'],
-        mixins: [setResponsables],
+        mixins: [setResponsables,getLibros],
         data() {
             return {
                 cliente: '',
@@ -611,7 +612,6 @@ import setResponsables from '../../mixins/setResponsables'
                 temporal: {},
                 queryTitulo: '',
                 inputLibro: true,
-                resultslibros: [],
                 inputUnidades: false,
                 unidades: '',
                 costo_unitario: '',
@@ -995,9 +995,7 @@ import setResponsables from '../../mixins/setResponsables'
             // MOSTRAR COINCIDENCIAS DE LIBROS
             mostrarLibros(){
                 if(this.queryTitulo.length > 0){
-                   axios.get('/mostrarLibros', {params: {queryTitulo: this.queryTitulo}}).then(response => {
-                        this.resultslibros = response.data;
-                    });
+                    this.getLibros(this.queryTitulo);
                 } 
             },
             // SELECCIONAR LIBRO

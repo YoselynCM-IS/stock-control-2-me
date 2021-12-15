@@ -60,7 +60,9 @@
 </template>
 
 <script>
+    import getLibros from './../../mixins/getLibros';
     export default {
+        mixins: [getLibros],
         data() {
             return {
                 libros: [],
@@ -85,8 +87,7 @@
                     registros: []
                 },
                 viewDetails: false,
-                queryTitulo: '',
-                resultslibros: []
+                queryTitulo: ''
             }
         },
         created: function(){
@@ -107,9 +108,7 @@
             },
             mostrarLibros(){
                 if(this.queryTitulo.length > 0){
-                   axios.get('/mostrarLibros', {params: {queryTitulo: this.queryTitulo}}).then(response => {
-                        this.resultslibros = response.data;
-                    });
+                    this.getLibros(this.queryTitulo);
                 } else{ this.resultslibros = []; }
             },
             obtenerLibro(libro){

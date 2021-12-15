@@ -28,7 +28,7 @@ class EntradaController extends Controller
             $entrada = Entrada::create([
                 'folio' => strtoupper($request->folio),
                 'editorial' => $request->editorial,
-                'unidades' => $request->unidades,
+                'unidades' => $request->unidades
             ]);
 
             $unidades = $this->save_registros($request->registros, $entrada);
@@ -47,14 +47,17 @@ class EntradaController extends Controller
         $unidades = 0;
         $lista_entradas = [];
         $entradas = collect($request_items);
-        $entradas->map(function($item) use(&$lista_entradas, $entrada, &$unidades){
+        $hoy = Carbon::now();
+        $entradas->map(function($item) use(&$lista_entradas, $entrada, &$unidades, $hoy){
             $unidades_base = (int) $item['unidades'];
             $libro_id = $item['id'];
             $lista_entradas[] = [
                 'entrada_id' => $entrada->id,
                 'libro_id'  => $libro_id,
                 'unidades'  => $unidades_base,
-                'unidades_pendientes'  => $unidades_base
+                'unidades_pendientes'  => $unidades_base,
+                'created_at' => $hoy,
+                'updated_at' => $hoy
             ];
 
             // AUMENTAR PIEZAS DE LOS LIBROS AGREGADOS
@@ -323,7 +326,8 @@ class EntradaController extends Controller
             $total = 0;
             $lista_entdevoluciones = [];
             $items = collect($request->registros);
-            $items->map(function($item) use(&$lista_entdevoluciones, $entrada, &$total){
+            $hoy = Carbon::now();
+            $items->map(function($item) use(&$lista_entdevoluciones, $entrada, &$total, $hoy){
                 $unidades_base = (int) $item['unidades_base'];
                 $total_base = (double) $item['total_base'];
                 $registro_id = $item['id'];
@@ -332,7 +336,9 @@ class EntradaController extends Controller
                         'entrada_id' => $entrada->id,
                         'registro_id' => $registro_id,
                         'unidades' => $unidades_base,
-                        'total' => $total_base
+                        'total' => $total_base,
+                        'created_at' => $hoy,
+                        'updated_at' => $hoy
                     ];
 
                     // DISMINUIR UNIDADES PENDIENTE

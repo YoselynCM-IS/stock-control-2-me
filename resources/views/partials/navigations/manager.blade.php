@@ -25,6 +25,9 @@
 		<a class="dropdown-item" href="{{ route('manager.movimientos.libros') }}">
 			{{ __("Libros") }}
 		</a>
+		<a class="dropdown-item" href="{{ route('manager.movimientos.entradas-salidas') }}">
+			{{ __("Entradas / Salidas") }}
+		</a>
 	</div>
 </li>
 <li class="nav-item dropdown">
@@ -48,9 +51,6 @@
 		<a class="dropdown-item" href="{{ route('manager.entradas.lista') }}">
 			{{ __("Lista") }}
 		</a>
-		<a class="dropdown-item" href="{{ route('manager.entradas.lista_crear') }}">
-			{{ __("Crear") }}
-		</a>
 		<a class="dropdown-item" href="{{ route('manager.entradas.pagos') }}">
 			{{ __("Pagos") }}
 		</a>
@@ -72,6 +72,5 @@
 		<a class="dropdown-item" href="{{ route('manager.otros.promociones') }}">{{ __("Promociones") }}</a>
 		<a class="dropdown-item" href="{{ route('manager.otros.donaciones') }}">{{ __("Donaciones") }}</a>
 	</div>
-</li>
-		
+</li>	
 @include('partials.navigations.logged')

@@ -77,7 +77,7 @@
                 <!-- LISTADO DE DONACIONES -->
                 <b-table v-if="regalos.length > 0" responsive
                     hover :tbody-tr-class="rowClass"
-                    :items="regalos" :fields="fields" class="mt-3">
+                    :items="regalos" :fields="fields">
                     <template v-slot:cell(index)="row">{{ row.index + 1 }}</template>
                     <template v-slot:cell(created_at)="row">{{ row.item.created_at | moment }}</template>
                     <template v-slot:cell(detalles)="row">
@@ -305,9 +305,10 @@
 
 <script>
 import setResponsables from '../../mixins/setResponsables'
+import getLibros from '../../mixins/getLibros';
     export default {
         props: ['role_id'],
-        mixins: [setResponsables],
+        mixins: [setResponsables,getLibros],
         data() {
             return {
                 regalosData: {},
@@ -354,7 +355,6 @@ import setResponsables from '../../mixins/setResponsables'
                 inputISBN: true,
                 inputLibro: true,
                 inputUnidades: false,
-                resultslibros: [],
                 state: null,
                 mostrarDetalles: false,
                 queryPlantel: null,
@@ -564,12 +564,8 @@ import setResponsables from '../../mixins/setResponsables'
             // MOSTRAR COINCIDENCIA DE LIBROS
             mostrarLibros(){
                 if(this.temporal.titulo.length > 0){
-                   axios.get('/mostrarLibros', {params: {queryTitulo: this.temporal.titulo}}).then(response => {
-                        this.resultslibros = response.data;
-                    }).catch(error => {
-                        this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
-                    });
-               }
+                    this.getLibros(this.temporal.titulo);
+                }
             },
             // SELECCIONAR LIBRO
             datosLibro(libro){

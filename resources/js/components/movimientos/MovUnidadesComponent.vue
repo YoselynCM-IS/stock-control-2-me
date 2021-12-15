@@ -11,7 +11,20 @@
                         </b-col>
                     </b-row>
                 </b-col>
-                <b-col sm="7" class="text-right">
+                <b-col>
+                    <b-input style="text-transform:uppercase;"
+                        placeholder="BUSCAR LIBRO" autofocus
+                        v-model="queryTitulo" @keyup="mostrarLibros()"
+                    ></b-input>
+                    <div class="list-group" v-if="resultslibros.length" id="listaL">
+                        <a class="list-group-item list-group-item-action" 
+                            v-for="(libro, i) in resultslibros" v-bind:key="i"
+                            href="#" @click="obtenerLibro(libro)">
+                            {{ libro.titulo }}
+                        </a>
+                    </div>
+                </b-col>
+                <b-col sm="2" class="text-right">
                     <b-button variant="dark" v-if="movimientos.length > 0" :href="`/download_movimientos/${queryEMov}`">
                         <i class="fa fa-download"></i> Descargar
                     </b-button>
@@ -42,9 +55,6 @@
                         </template>
                         <template v-slot:cell(remisiones)="row">
                             {{ row.item.remisiones | formatNumber }}
-                        </template>
-                        <template v-slot:cell(notas)="row">
-                            {{ row.item.notas | formatNumber }}
                         </template>
                         <template v-slot:cell(promociones)="row">
                             {{ row.item.promociones | formatNumber }}
@@ -249,9 +259,11 @@
 
 <script>
 import LoadComponent from '../cortes/partials/LoadComponent.vue';
+import getLibros from './../../mixins/getLibros';
     export default {
         props: ['editoriales'],
         components: { LoadComponent },
+        mixins: [getLibros],
         data() {
             return {
                 options: [],
@@ -300,7 +312,8 @@ import LoadComponent from '../cortes/partials/LoadComponent.vue';
                 tablaCategoria: false,
                 all_detalles: {},
                 view_detalles: false,
-                load: false
+                load: false,
+                queryTitulo: ''
             }
         },
         filters: {
@@ -418,6 +431,25 @@ import LoadComponent from '../cortes/partials/LoadComponent.vue';
                     variant: variant,
                     solid: true
                 })
+            },
+            mostrarLibros(){
+                if(this.queryTitulo.length > 0){
+                    this.getLibros(this.queryTitulo);
+                } 
+                else{
+                    this.resultslibros = [];
+                }
+            },
+            obtenerLibro(libro){
+                this.load = true;
+                axios.get('/libro/movimientos_libro', {params: {libro_id: libro.id}}).then(response => {
+                    this.movimientos = response.data;
+                    this.resultslibros = [];
+                    this.load = false;
+                }).catch(error => {
+                    this.load = false;
+                    this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
+                });
             }
         }
     }
@@ -426,5 +458,9 @@ import LoadComponent from '../cortes/partials/LoadComponent.vue';
 <style>
 .collapsed > .when-opened, :not(.collapsed) > .when-closed {
     display: none;
+}
+#listaL{
+    position: absolute;
+    z-index: 100
 }
 </style>

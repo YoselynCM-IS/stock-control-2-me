@@ -32,21 +32,23 @@ class DevolucioneController extends Controller
             // DEVOLUCIONES
             $lista_fechas = [];
             $devoluciones = collect($request->devoluciones);
-            $devoluciones->map(function($devolucion) use(&$lista_fechas, $remision, $entregado_por, &$total_devolucion){
+            $hoy = Carbon::now();
+            $devoluciones->map(function($devolucion) use(&$lista_fechas, $remision, $entregado_por, &$total_devolucion, $hoy){
                 $unidades_base = $devolucion['unidades_base'];
                 $total_base = $devolucion['total_base'];
 
                 if($unidades_base != 0){
                     // Buscar devolución
                     $d = Devolucione::find($devolucion['id']);
-
                     $lista_fechas[] = [
                         'remisione_id' => $remision->id,
-                        'fecha_devolucion' => Carbon::now()->format('Y-m-d'),
+                        'fecha_devolucion' => $hoy->format('Y-m-d'),
                         'libro_id' => $d->libro->id,
                         'unidades' => $unidades_base,
                         'total' => $total_base,
-                        'entregado_por' => $entregado_por
+                        'entregado_por' => $entregado_por,
+                        'created_at' => $hoy,
+                        'updated_at' => $hoy
                     ];
                     
                     $unidades = $d->unidades + $unidades_base;

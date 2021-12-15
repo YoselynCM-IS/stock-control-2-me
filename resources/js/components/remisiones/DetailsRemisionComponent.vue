@@ -16,10 +16,11 @@
                 </b-button>
             </b-col>
             <b-col sm="4" class="text-right">
-                <a class="btn btn-dark" v-if="role_id !== 2" :href="'/imprimirSalida/' + remision.id">
+                <!-- <a class="btn btn-dark" v-if="role_id !== 2" :href="'/imprimirSalida/' + remision.id">
                     <i class="fa fa-download"></i> Descargar
-                </a>
-                <b-button v-if="role_id === 2 || role_id == 6" :href="`/download_remision/${remision.id}`" variant="dark">
+                </a> -->
+                <b-button :href="`/download_remision/${remision.id}`" 
+                    pill variant="dark">
                     <i class="fa fa-download"></i> Descargar
                 </b-button>
             </b-col>

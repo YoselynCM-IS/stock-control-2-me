@@ -78,11 +78,15 @@
                     {{ data.item.defectuosos | formatNumber }}
                 </template>
                 <template v-slot:cell(accion)="data">
-                    <b-button v-if="role_id == 6" 
-                        style="color:white;" variant="warning" 
-                        v-b-modal.modal-editar @click="editarLibro(data.item, data.index)">
-                        <i class="fa fa-pencil"></i>
-                    </b-button>
+                    <div v-if="role_id == 6">
+                        <b-button style="color:white;" variant="warning" pill
+                            v-b-modal.modal-editar @click="editarLibro(data.item, data.index)">
+                            <i class="fa fa-pencil"></i>
+                        </b-button>
+                        <b-button variant="danger" pill @click="inactivarLibro(data.item)">
+                            <i class="fa fa-close"></i>
+                        </b-button>
+                    </div>
                 </template>
             </b-table>
             <b-alert v-else show variant="secondary">
@@ -298,6 +302,17 @@
                     variant: variant,
                     solid: true
                 })
+            },
+            inactivarLibro(libro){
+                this.load = true;
+                let form = { libro_id: libro.id };
+                axios.put('/libro/inactivar', form).then(response => {
+                    swal("OK", "El libro se elimino correctamente.", "success")
+                        .then((value) => { location.reload(); });
+                    this.load = false;
+                }).catch(error => {
+                    this.load = false;
+                });
             }
         }
     }

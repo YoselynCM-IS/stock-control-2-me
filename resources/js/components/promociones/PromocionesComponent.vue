@@ -317,10 +317,11 @@
 </template>
 
 <script>
-import setResponsables from '../../mixins/setResponsables'
+import setResponsables from '../../mixins/setResponsables';
+import getLibros from '../../mixins/getLibros';
     export default {
         props: ['role_id', 'registersall'],
-        mixins: [setResponsables],
+        mixins: [setResponsables,getLibros],
         data() {
             return {
                 listadoPromociones: true,
@@ -370,7 +371,6 @@ import setResponsables from '../../mixins/setResponsables'
                 inputISBN: true,
                 inputLibro: true,
                 inputUnidades: false,
-                resultslibros: [],
                 state: null,
                 mostrarDetalles: false,
                 folio: null,
@@ -566,11 +566,7 @@ import setResponsables from '../../mixins/setResponsables'
             // MOSTRAR COINCIDENCIA DE LIBROS
             mostrarLibros(){
                 if(this.temporal.titulo.length > 0){
-                   axios.get('/mostrarLibros', {params: {queryTitulo: this.temporal.titulo}}).then(response => {
-                        this.resultslibros = response.data;
-                    }).catch(error => {
-                        this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
-                    });
+                    this.getLibros(this.temporal.titulo);
                }
             },
             // SELECCIONAR LIBRO
