@@ -7,7 +7,7 @@
 			{{ __('Lista') }}
 		</a>
 		<a class="dropdown-item" href="{{ route('manager.remisiones.pago_devolucion') }}">
-			{{ __('Pago / Devolución') }}
+			{{ __('Cerrar / Devolución') }}
 		</a>
 		<a class="dropdown-item" href="{{ route('manager.remisiones.fecha_adeudo') }}">
 			{{ __('Fecha de adeudos') }}

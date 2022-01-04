@@ -524,6 +524,8 @@ Route::name('cortes.')->prefix('cortes')->group(function () {
 
     // ABRIR EN PAGINA NUEVA
     Route::get('/details_cliente/{cliente_id}', 'CorteController@details_cliente')->name('details_cliente');
+
+    Route::post('/upload_payment', 'CorteController@upload_payment')->name('upload_payment');
 });
 
 

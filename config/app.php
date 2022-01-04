@@ -179,7 +179,8 @@ return [
         Laraveles\Spanish\SpanishServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
-
+        Intervention\Image\ImageServiceProvider::class,
+        App\Providers\DropboxServiceProvider::class
     ],
 
     /*
@@ -231,7 +232,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Image' => Intervention\Image\Facades\Image::class
     ],
 
 ];

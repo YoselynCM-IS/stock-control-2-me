@@ -11,16 +11,16 @@
                         <span slot="next-nav"><i class="fa fa-angle-right"></i></span>
                     </pagination>
                 </b-col>
-                <b-col sm="4" class="text-center">
+                <!-- <b-col sm="4" class="text-center"> -->
                     <!-- REMISIONES -->
-                    <b-button variant="primary" pill @click="classify(1)">
+                    <!-- <b-button variant="primary" pill @click="classify(1)">
                         <i class="fa fa-exchange"></i> Remisiones
-                    </b-button>
+                    </b-button> -->
                     <!-- PAGOS -->
-                    <b-button variant="primary" pill @click="classify(2)">
+                    <!-- <b-button variant="primary" pill @click="classify(2)">
                         <i class="fa fa-exchange"></i> Pagos
-                    </b-button>
-                </b-col>
+                    </b-button> -->
+                <!-- </b-col> -->
                 <b-col sm="2" class="text-center">
                     <!-- AGREGAR CORTE -->
                     <b-button id="show-necorte" @click="showNewCorte"

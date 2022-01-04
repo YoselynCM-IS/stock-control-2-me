@@ -13,13 +13,13 @@ class CreateCortesTable extends Migration
      */
     public function up()
     {
-        Schema::create('cortes', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->enum('tipo', ['A','B']);
-            $table->date('inicio');
-            $table->date('final');
-            $table->timestamps();
-        });
+        // Schema::create('cortes', function (Blueprint $table) {
+        //     $table->bigIncrements('id');
+        //     $table->enum('tipo', ['A','B']);
+        //     $table->date('inicio');
+        //     $table->date('final');
+        //     $table->timestamps();
+        // });
     }
 
     /**

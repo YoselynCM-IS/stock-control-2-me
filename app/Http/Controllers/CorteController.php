@@ -2,16 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+// use Spatie\Dropbox\Client;
 use App\Remdeposito;
 use App\Remcliente;
 use App\Remisione;
 use App\Deposito;
 use App\Cctotale;
 use App\Corte;
+use App\Foto;
 
 class CorteController extends Controller
 {
+    public function __construct()
+    {
+        // Necesitamos obtener una instancia de la clase Client la cual tiene algunos métodos
+        // que serán necesarios.
+        $this->dropbox = Storage::disk('dropbox')->getDriver()->getAdapter()->getClient();   
+    }
+
     // Obtener todos los cortes (PAGINADO)
     public function index() {
         $cortes = Corte::orderBy('inicio', 'desc')->paginate(50);
@@ -59,7 +70,7 @@ class CorteController extends Controller
             $remcliente = Remcliente::where('cliente_id', $cctotale->cliente_id)->first();
             $remdepositos = Remdeposito::where('remcliente_id', $remcliente->id)
                                 ->where('corte_id', $cctotale->corte_id)
-                                ->orderBy('created_at', 'desc')->get();
+                                ->with('foto')->orderBy('created_at', 'desc')->get();
             $remisiones = Remisione::where('corte_id', $cctotale->corte_id)
                             ->where('cliente_id', $cctotale->cliente_id)
                             ->where(function ($query) {
@@ -184,15 +195,15 @@ class CorteController extends Controller
         try {
             $remisiones->map(function($remision) use(&$totales, $corte_id){
                 $remision = Remisione::find($remision['id']);
-                $deposito = Deposito::where('remisione_id', $remision->id)->first();
+                $depositos = Deposito::where('remisione_id', $remision->id)->get();
         
                 $total_pagos = 0;
                 $total_pagar = $remision->total;
                 $total_devolucion = $remision->total_devolucion;
-
-                if($deposito !== null) $total_pagos = $deposito->pago;
-                if($deposito !== null || $total_devolucion > 0)
-                    $total_pagar = $remision->total_pagar;
+ 
+                if($depositos->count() > 0) $total_pagos = $depositos->sum('pago');
+                if($depositos->count() > 0 || $total_devolucion > 0)
+                    $total_pagar = $remision->total - ($total_pagos + $total_devolucion);
 
                 $totales['total'] += $remision->total;
                 $totales['total_devolucion'] += $total_devolucion;
@@ -523,5 +534,48 @@ class CorteController extends Controller
             return response()->json($exception->getMessage());
         }
         return response()->json(true);
+    }
+
+    public function upload_payment(Request $request){
+        // VALIDACIÓN DE DATOS
+        $this->validate($request, [
+            'file' => ['required', 'mimes:jpg,png,jpeg', 'max:3072']
+        ]);
+
+        \DB::beginTransaction();
+        try {
+            $remdeposito = Remdeposito::find($request->pagoid);
+            // SUBIR IMAGEN
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            $name_file = "id-".$remdeposito->id."_".time().".".$extension;
+    
+            $image = Image::make($request->file('file'));
+            $image->resize(1280, null, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+    
+            Storage::disk('dropbox')->put(
+                '/stock2/'.$name_file, (string) $image->encode('jpg', 30)
+            );
+            
+            $response = $this->dropbox->createSharedLinkWithSettings(
+                '/stock2/'.$name_file, 
+                ["requested_visibility" => "public"]
+            );
+    
+            $foto = Foto::create([
+                'remdeposito_id' => $remdeposito->id,
+                'name' => $response['name'],
+                'extension' => $extension,
+                'size' => $response['size'],
+                'public_url' => $response['url']
+            ]);
+            \DB::commit();
+        }  catch (Exception $e) {
+            \DB::rollBack();
+        }
+        return response()->json($foto);
     }
 }

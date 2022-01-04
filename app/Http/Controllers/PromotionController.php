@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
 use App\Exports\PromotionsExport;
+use App\Exports\promociones\PromotionExport;
 use Illuminate\Http\Request;
 use App\Promotion;
 use App\Departure;
@@ -125,9 +126,12 @@ class PromotionController extends Controller
     }
 
     public function download_promocion($id){
-        $promocion = Promotion::whereId($id)->with('departures.libro')->first();
-        $data['promocion'] = $promocion;
-        $pdf = PDF::loadView('download.pdf.promociones.promocion', $data); 
-        return $pdf->download('promocion.pdf');
+        $promocion = Promotion::find($id);
+        $name_archivo = 'promocion_.xlsx';
+        return Excel::download(new PromotionExport($promocion->id), $name_archivo);
+        // $promocion = Promotion::whereId($id)->with('departures.libro')->first();
+        // $data['promocion'] = $promocion;
+        // $pdf = PDF::loadView('download.pdf.promociones.promocion', $data); 
+        // return $pdf->download('promocion.pdf');
     }
 }
