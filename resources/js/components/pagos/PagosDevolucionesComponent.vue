@@ -62,13 +62,13 @@
                     <template v-slot:cell(total_devolucion)="row">${{ row.item.total_devolucion | formatNumber }}</template>
                     <template v-slot:cell(pagos)="row">${{ row.item.pagos | formatNumber }}</template>
                     <template v-slot:cell(total_pagar)="row">${{ row.item.total_pagar | formatNumber }}</template>
-                    <template v-slot:cell(registrar_pago)="row">
+                    <!-- <template v-slot:cell(registrar_pago)="row">
                         <b-button 
                             v-if="row.item.total_pagar > 0 && role_id == 6"
                             variant="primary" 
                             @click="registrarPago(row.item, row.index)">Pago
                         </b-button>
-                    </template>
+                    </template> -->
                     <template v-slot:cell(registrar_devolucion)="row">
                         <b-button 
                             v-if="row.item.total_pagar > 0 && (role_id == 2 || role_id == 6)" 
@@ -358,7 +358,7 @@
                     {key: 'pagos', label: 'Pagado'},
                     {key: 'total_devolucion', label: 'Devolución'},
                     {key: 'total_pagar', label: 'Pagar'},
-                    {key: 'registrar_pago', label: ''},
+                    // {key: 'registrar_pago', label: ''},
                     {key: 'registrar_devolucion', label: ''},
                     {key: 'cerrar_remision', label: ''}
                 ], // Columnas de la tabla principal donde se muestran las remisiones

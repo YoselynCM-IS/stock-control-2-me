@@ -2,17 +2,11 @@
     <div>
         <b-row>
             <b-col sm="8">
-                <h4 style="color: #170057">Registrar devolución</h4>
                 <label><b>Folio:</b> {{form.folio}}</label><br>
                 <label><b>Editorial:</b> {{form.editorial}}</label>
             </b-col>
             <b-col>
                 <b-button variant="success" pill @click="confirmarDevolucion()"><i class="fa fa-check"></i> Guardar</b-button>
-            </b-col>
-            <b-col align="right">
-                <b-button variant="secondary" pill>
-                    <i class="fa fa-mail-reply"></i> Regresar
-                </b-button>
             </b-col>
         </b-row>
         <b-table :items="form.registros" :fields="fieldsD">

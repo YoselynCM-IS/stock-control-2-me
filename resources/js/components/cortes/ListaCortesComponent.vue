@@ -56,6 +56,11 @@
         </div>
         <div v-if="showDetails">
             <!-- DETALLES DEL CORTE -->
+            <div class="text-right mb-2">
+                <b-button variant="secondary" pill @click="showDetails = !showDetails">
+                    <i class="fa fa-arrow-left"></i> Regresar
+                </b-button>
+            </div>
             <details-corte-component :corte="corte"></details-corte-component>
         </div>
         <!-- MODALS -->

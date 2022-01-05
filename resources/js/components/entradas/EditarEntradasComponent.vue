@@ -302,6 +302,14 @@
         </div>
         <!-- AGREGAR DEVOLUCION -->
         <div v-if="mostrarDevolucion">
+            <b-row class="mb-2">
+                <b-col><h4 style="color: #170057">Registrar devolución</h4></b-col>
+                <b-col sm="2" class="text-right">
+                    <b-button variant="secondary" pill @click="mostrarDevolucion = !mostrarDevolucion; listadoEntradas = true;">
+                        <i class="fa fa-mail-reply"></i> Regresar
+                    </b-button>
+                </b-col>
+            </b-row>
             <devolucion-entrada :form="formDev"></devolucion-entrada>
         </div>
         <!-- MODALS -->

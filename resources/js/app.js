@@ -87,6 +87,8 @@ Vue.component('movunidades-component', require('./components/movimientos/MovUnid
 Vue.component('movmonto-component', require('./components/movimientos/MovMontoComponent.vue').default);
 Vue.component('unidades-component', require('./components/movimientos/UnidadesComponent.vue').default);
 Vue.component('unidades-libro-component', require('./components/movimientos/UnidadesLibroComponent.vue').default);
+Vue.component('entrada-salida-component', require('./components/movimientos/EntradaSalidaComponent.vue').default);
+
 // // CLIENTES
 Vue.component('mov-clientes-component', require('./components/movimientos/clientes/MovClientesComponent.vue').default);
 

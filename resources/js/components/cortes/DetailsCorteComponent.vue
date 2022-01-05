@@ -15,11 +15,6 @@
                     </a>
                 </div>
             </b-col>
-            <b-col sm="2" class="text-center">
-                <b-button variant="secondary" pill :href="`/manager/cortes`">
-                    <i class="fa fa-arrow-left"></i> Regresar
-                </b-button>
-            </b-col>
         </b-row>
         <b-row>
             <b-col>

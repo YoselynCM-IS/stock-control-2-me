@@ -6,6 +6,11 @@
                 <b-col>
                     <h5><b>Cliente: {{ datosCortes.name }}</b></h5>
                 </b-col>
+                <b-col sm="3">
+                    <b-button class="btn btn-dark" pill :href="`/pagos/download_edocuenta/${datosCortes.cliente_id}`">
+                        <i class="fa fa-download"></i> Edo. Cuenta
+                    </b-button>
+                </b-col>
                 <b-col sm="2" class="text-right">
                     <b-button variant="secondary" pill @click="goBack()">
                         <i class="fa fa-arrow-left"></i> Regresar
