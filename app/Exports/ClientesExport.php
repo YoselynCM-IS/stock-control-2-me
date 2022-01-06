@@ -12,10 +12,12 @@ class ClientesExport implements FromCollection,WithHeadings
     {
         return [
             'CLIENTE', 
+            'CONTACTO',
+            'DIRECCIÓN',
+            'RFC',
+            'DIRECCIÓN FISCAL',
             'CORREO',
             'TELÉFONO',
-            'DIRECCIÓN',
-            'CONTACTO',
             'CONDICIONES DE PAGO'
         ];
     }
@@ -26,7 +28,7 @@ class ClientesExport implements FromCollection,WithHeadings
     public function collection()
     {
         $clientes = \DB::table('clientes')
-                    ->select('name', 'email', 'telefono', 'direccion', 'contacto', 'condiciones_pago')
+                    ->select('name', 'contacto', 'direccion', 'rfc', 'fiscal', 'email', 'telefono', 'condiciones_pago')
                     ->orderBy('name','asc')->get();
         return $clientes;
     }

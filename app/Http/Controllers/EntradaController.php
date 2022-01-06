@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\DB;
 use App\Exports\EntradasExport;
+use App\Exports\entradas\EntradaExport;
 use App\Exports\EAccountExport;
 use Illuminate\Http\Request;
 use App\Entdevolucione;
@@ -209,12 +210,9 @@ class EntradaController extends Controller
 
     // IMPRIMIR REPORTE DE ENTRADA
     public function downloadEntrada($id){
-        $entrada = Entrada::whereId($id)->with(['registros.libro', 'repayments'])->first();
-        $data['entrada'] = $entrada;
-
-        $pdf = PDF::loadView('download.pdf.entradas.entrada-costos', $data); 
-        
-        return $pdf->download('entrada-'.$id.'.pdf');
+        $entrada = Entrada::find($id);
+        $name_archivo = 'entrada_' . $entrada->folio . '.xlsx';
+        return Excel::download(new EntradaExport($entrada->id), $name_archivo);
     }
 
     // DESCARGAR TODAS LAS ENTRADAS
