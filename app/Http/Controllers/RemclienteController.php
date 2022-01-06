@@ -108,14 +108,23 @@ class RemclienteController extends Controller
             $total = $remisiones[0]['total'];
             $total_pagos = $remdepositos[0]['pago'] + $depositos[0]['pago'];
             $total_devolucion = $remisiones[0]['total_devolucion'];
+            if($cctotale != null){
+                $cta = $total == $cctotale->total;
+                $ctp = $total_pagos == $cctotale->total_pagos;
+                $ctd = $total_devolucion == $cctotale->total_devolucion;
+            } else {
+                $cta = true;
+                $ctp = true;
+                $ctd = true;
+            }
             $c = [
                 'corte' => 'Temporada '.$corte->tipo.' '.$corte->inicio.'-'.$corte->final,
                 'total' => $total,
                 'total_pagos' => $total_pagos,
                 'total_devolucion' => $total_devolucion,
-                'cta' => $total == $cctotale->total,
-                'ctp' => $total_pagos == $cctotale->total_pagos,
-                'ctd' => $total_devolucion == $cctotale->total_devolucion
+                'cta' => $cta,
+                'ctp' => $ctp,
+                'ctd' => $ctd
             ];
             $lista[] = $c;
         });

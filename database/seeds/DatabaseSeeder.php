@@ -40,26 +40,33 @@ class DatabaseSeeder extends Seeder
             // ]
         ]);
 
-        \DB::table('users')->insert([
-            0 => [
-                'role_id'   => 6,
-                'name'      => 'Yoselyn', 
-                'user_name' => 'yoselyn-cm',
-                'email'     => 'yoselyn@gmail.com',
-                'password'  => bcrypt('2y053'),
-                'created_at' => '2021-04-29 00:00:00',
-                'updated_at' => '2021-04-29 00:00:00',
-            ],
-        ]);
-
         // \DB::table('users')->insert([
         //     0 => [
-        //         'role_id'   => 7,
-        //         'name'      => 'Visitor', 
-        //         'user_name' => 'visitor',
-        //         'email'     => 'visitor@gmail.com',
-        //         'password'  => bcrypt('visitor')
+        //         'role_id'   => 6,
+        //         'name'      => 'Yoselyn', 
+        //         'user_name' => 'yoselyn-cm',
+        //         'email'     => 'yoselyn@gmail.com',
+        //         'password'  => bcrypt('2y053'),
+        //         'created_at' => '2021-04-29 00:00:00',
+        //         'updated_at' => '2021-04-29 00:00:00',
         //     ],
         // ]);
+
+        \DB::table('users')->insert([
+            0 => [
+                'role_id'   => 5,
+                'name'      => 'Rocio Ceballos', 
+                'user_name' => 'rocio-me',
+                'email'     => 'rocio@gmail.com',
+                'password'  => bcrypt('01c0r63')
+            ],
+            1 => [
+                'role_id'   => 5,
+                'name'      => 'Edgar Espinoza', 
+                'user_name' => 'edgar-me',
+                'email'     => 'edgar@gmail.com',
+                'password'  => bcrypt('r46d374')
+            ],
+        ]);
     }
 }
