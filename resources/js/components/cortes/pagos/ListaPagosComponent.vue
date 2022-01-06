@@ -22,6 +22,11 @@
                     </a>
                 </div>
             </b-col>
+            <b-col sm="4" class="text-right">
+                <b-button href="/descargar_gralClientes" variant="dark" pill>
+                    <i class="fa fa-download"></i> Descargar
+                </b-button>
+            </b-col>
         </b-row>
         <!-- TABLA DE CLIENTES -->
         <b-table v-if="!load" hover class="mt-3" responsive

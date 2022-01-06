@@ -10,6 +10,7 @@ use App\Libro;
 use App\Note;
 use Carbon\Carbon;
 use App\Exports\NotesExport;
+use App\Exports\notes\NoteExport;
 use Excel;
 use PDF;
 
@@ -260,12 +261,15 @@ class NoteController extends Controller
     }
 
     public function download_nota($id){
-        $nota = Note::whereId($id)->with('registers.libro')->first();
-        $total_unidades = $this->acumular_unidades($nota->registers);
-        $data['nota'] = $nota;
-        $data['total_unidades'] = $total_unidades;
-        $pdf = PDF::loadView('download.pdf.notas.nota', $data); 
-        return $pdf->download('nota.pdf');
+        $note = Note::find($id);
+        $nombre_archivo = 'nota_' . $note->folio . '.xlsx';
+        return Excel::download(new NoteExport($id), $nombre_archivo);
+        // $nota = Note::whereId($id)->with('registers.libro')->first();
+        // $total_unidades = $this->acumular_unidades($nota->registers);
+        // $data['nota'] = $nota;
+        // $data['total_unidades'] = $total_unidades;
+        // $pdf = PDF::loadView('download.pdf.notas.nota', $data); 
+        // return $pdf->download('nota.pdf');
     }
 
     public function acumular_unidades($registers){

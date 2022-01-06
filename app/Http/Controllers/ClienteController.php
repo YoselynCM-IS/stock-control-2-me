@@ -51,7 +51,7 @@ class ClienteController extends Controller
     // Función utilizada en ClientesComponent
     public function editar(Request $request){
         $cliente = Cliente::whereId($request->id)->first();
-        $cliente->name = 'PRUEBA';
+        $cliente->name = 'CLIENTE-'.$cliente->name;
         $cliente->save();
         $this->validacion($request);
         \DB::beginTransaction();
@@ -62,7 +62,9 @@ class ClienteController extends Controller
                 'email' => $request->email,
                 'telefono' => $request->telefono,
                 'direccion' => strtoupper($request->direccion),
-                'condiciones_pago' => strtoupper($request->condiciones_pago)
+                'condiciones_pago' => strtoupper($request->condiciones_pago),
+                'rfc' => strtoupper($request->rfc),
+                'fiscal' => strtoupper($request->fiscal)
             ]);
             \DB::commit();
         } catch (Exception $e) {
@@ -84,7 +86,9 @@ class ClienteController extends Controller
                 'email' => $request->email,
                 'telefono' => $request->telefono,
                 'direccion' => strtoupper($request->direccion),
-                'condiciones_pago' => strtoupper($request->condiciones_pago)
+                'condiciones_pago' => strtoupper($request->condiciones_pago),
+                'rfc' => strtoupper($request->rfc),
+                'fiscal' => strtoupper($request->fiscal)
             ]);
 
             Remcliente::create([
@@ -122,8 +126,10 @@ class ClienteController extends Controller
             'name' => 'min:3|max:100|required|string|unique:clientes',
             'email' => 'min:8|max:50|required|email',
             'telefono' => 'required|numeric|max:9999999999|min:1000000',
-            'direccion' => 'min:3|max:150|required|string',
-            'condiciones_pago' => 'min:3|max:150|required|string'
+            'direccion' => 'min:3|max:250|required|string',
+            'condiciones_pago' => 'min:3|max:150|required|string',
+            'rfc' => 'min:3|max:50|required|string',
+            'fiscal' => 'min:3|max:250|required|string',
         ]);
     }
 

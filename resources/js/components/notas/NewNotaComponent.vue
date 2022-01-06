@@ -75,7 +75,7 @@
                         v-if="notes.length > 0"
                         class="btn btn-dark"
                         :href="'/download_note/' + queryCliente + '/' + inicio + '/' + final + '/general'">
-                        <i class="fa fa-download"></i> Descargar
+                        <i class="fa fa-download"></i> General
                     </a>
                     <a 
                         v-if="notes.length > 0 && (role_id === 1 || role_id == 6)"
@@ -85,7 +85,7 @@
                     </a>
                 </b-col>
                 <b-col sm="3" class="text-right">
-                    <div v-if="role_id == 2 || role_id == 6">
+                    <div v-if="role_id === 1 || role_id == 2 || role_id == 6">
                         <b-button variant="success" @click="func_crearNota()"><i class="fa fa-plus"></i> Crear nota</b-button>
                     </div>
                 </b-col>

@@ -9,6 +9,9 @@
 		<a class="dropdown-item" href="{{ route('administrador.pagos') }}">
 			{{ __('Pagos') }}
 		</a>
+		<a class="dropdown-item" href="{{ route('administrador.cerrar') }}">
+			{{ __('Devoluciones / Cerrar') }}
+		</a>
 		<a class="dropdown-item" href="{{ route('administrador.fecha-adeudo') }}">
 			{{ __('Fecha de adeudos') }}
 		</a>
@@ -38,17 +41,20 @@
 		Movimientos <span class="caret"></span>
 	</a>
 	<div class="dropdown-menu dropdown-menu-left" aria-labelledby="navbarDropdown">
-		<a class="dropdown-item" href="{{ route('administrador.unidades') }}">
-			{{ __('Ventas por cliente') }}
-		</a>
-		<a class="dropdown-item" href="{{ route('administrador.unidades_libro') }}">
-			{{ __('Ventas por libro') }}
+		<a class="dropdown-item" href="{{ route('administrador.entradas-salidas') }}">
+			{{ __("Entradas / Salidas") }}
 		</a>
 		<a class="dropdown-item" href="{{ route('administrador.movimientos') }}">
 			{{ __('Movimientos (Unidades)') }}
 		</a>
 		<a class="dropdown-item" href="{{ route('administrador.movimientos_monto') }}">
 			{{ __('Movimientos (Monto)') }}
+		</a>
+		<a class="dropdown-item" href="{{ route('administrador.unidades') }}">
+			{{ __('Ventas por cliente') }}
+		</a>
+		<a class="dropdown-item" href="{{ route('administrador.unidades_libro') }}">
+			{{ __('Ventas por libro') }}
 		</a>
 	</div>
 </li>

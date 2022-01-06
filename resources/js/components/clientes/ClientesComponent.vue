@@ -13,11 +13,11 @@
                 </b-row>
             </b-col>
             <b-col class="text-right" sm="2">
-                <b-button href="/descargar_clientes" variant="dark"><i class="fa fa-download"></i> Descargar</b-button>
+                <b-button href="/descargar_clientes" variant="dark"><i class="fa fa-download"></i> Lista</b-button>
             </b-col>
             <!-- AGREGAR NUEVO CLIENTE -->
             <b-col class="text-right" sm="3">
-                <b-button v-if="(role_id === 2 || role_id == 6)" variant="success" v-b-modal.modal-nuevoCliente><i class="fa fa-plus"></i> Agregar cliente</b-button>
+                <b-button v-if="(role_id === 1 || role_id === 2 || role_id == 6)" variant="success" v-b-modal.modal-nuevoCliente><i class="fa fa-plus"></i> Agregar cliente</b-button>
             </b-col>
         </b-row>
         <hr>
@@ -36,7 +36,7 @@
                 </template>
                 <template v-slot:cell(editar)="row">
                     <b-button 
-                        v-if="role_id === 2 || role_id == 6" 
+                        v-if="role_id === 1 || role_id === 2 || role_id == 6" 
                         v-b-modal.modal-editarCliente 
                         variant="warning" 
                         style="color: white;"
@@ -58,9 +58,11 @@
         <b-modal id="modal-detalles" :title="`${form.name ? form.name:''}`" hide-footer>
             <div v-if="!loadDetails">
                 <label><b>Contacto:</b> {{ form.contacto }}</label><br>
+                <label><b>Dirección:</b> {{ form.direccion }}</label><br>
+                <label><b>RFC:</b> {{ form.rfc }}</label><br>
+                <label><b>Dirección fiscal:</b> {{ form.fiscal }}</label><br>
                 <label><b>Correo:</b> {{ form.email }}</label><br>
                 <label><b>Telefono:</b> {{ form.telefono }}</label><br>
-                <label><b>Dirección:</b> {{ form.direccion }}</label><br>
                 <label><b>Condiciones de pago:</b> {{ form.condiciones_pago }}</label>
             </div>
             <load-component v-else></load-component>
@@ -94,6 +96,44 @@
                     </div>
                 </b-row>
                 <b-row class="my-1">
+                    <b-col align="right">Dirección</b-col>
+                    <div class="col-md-7">
+                        <b-form-input 
+                            id="input-direccion"
+                            style="text-transform:uppercase;"
+                            v-model="form.direccion" 
+                            :disabled="loaded"
+                            required>
+                        </b-form-input>
+                        <div v-if="errors && errors.direccion" class="text-danger">{{ errors.direccion[0] }}</div>
+                    </div>
+                </b-row>
+                <b-row class="my-1">
+                <b-col align="right">RFC</b-col>
+                    <div class="col-md-7">
+                        <b-form-input 
+                            id="input-rfc"
+                            style="text-transform:uppercase;"
+                            v-model="form.rfc"
+                            :disabled="loaded">
+                        </b-form-input>
+                        <div v-if="errors && errors.rfc" class="text-danger">{{ errors.rfc[0] }}</div>
+                    </div>
+                </b-row>
+                <b-row class="my-1">
+                    <b-col align="right">Dirección fiscal</b-col>
+                    <div class="col-md-7">
+                        <b-form-input 
+                            id="input-fiscal"
+                            style="text-transform:uppercase;"
+                            v-model="form.fiscal" 
+                            :disabled="loaded"
+                            required>
+                        </b-form-input>
+                        <div v-if="errors && errors.fiscal" class="text-danger">{{ errors.fiscal[0] }}</div>
+                    </div>
+                </b-row>
+                <b-row class="my-1">
                     <b-col align="right">Correo electrónico</b-col>
                     <div class="col-md-7">
                         <b-form-input 
@@ -116,19 +156,6 @@
                             required>
                         </b-form-input>
                         <div v-if="errors && errors.telefono" class="text-danger">{{ errors.telefono[0] }}</div>
-                    </div>
-                </b-row>
-                <b-row class="my-1">
-                    <b-col align="right">Dirección</b-col>
-                    <div class="col-md-7">
-                        <b-form-input 
-                            id="input-direccion"
-                            style="text-transform:uppercase;"
-                            v-model="form.direccion" 
-                            :disabled="loaded"
-                            required>
-                        </b-form-input>
-                        <div v-if="errors && errors.direccion" class="text-danger">{{ errors.direccion[0] }}</div>
                     </div>
                 </b-row>
                 <b-row class="my-1">
@@ -255,6 +282,8 @@
                 this.form.telefono = cliente.telefono;
                 this.form.direccion = cliente.direccion;
                 this.form.condiciones_pago = cliente.condiciones_pago;
+                this.form.rfc = cliente.rfc;
+                this.form.fiscal = cliente.fiscal;
             },
             // AGREGAR CLIENTE A LA LISTA (EVENTO)
             actClientes(cliente){

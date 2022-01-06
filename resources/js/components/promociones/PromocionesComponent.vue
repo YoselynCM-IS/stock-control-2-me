@@ -76,17 +76,17 @@
                         v-if="promotions.length > 0"
                         class="btn btn-dark"
                         :href="'/download_promotion/' + queryPlantel + '/' + inicio + '/' + final + '/general'">
-                        <i class="fa fa-download"></i> Descargar
+                        <i class="fa fa-download"></i> General
                     </a>
                     <a 
-                        v-if="promotions.length > 0 && (role_id === 1 || role_id == 6)"
+                        v-if="promotions.length > 0 && (role_id === 1 || role_id === 2 || role_id == 6)"
                         class="btn btn-dark"
                         :href="'/download_promotion/' + queryPlantel + '/' + inicio + '/' + final + '/detallado'">
                         <i class="fa fa-download"></i> Detallado
                     </a>
                 </b-col>
                 <b-col sm="3" class="text-right">
-                    <b-button v-if="role_id == 2 || role_id == 5 || role_id == 6" 
+                    <b-button v-if="role_id === 1 || role_id == 2 || role_id == 5 || role_id == 6" 
                         variant="success" @click="registrarPromocion()">
                         <i class="fa fa-plus"></i> Registrar promoción
                     </b-button>

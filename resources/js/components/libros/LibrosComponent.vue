@@ -54,7 +54,7 @@
             <b-col class="text-right">
                 <!-- DESCARGAR LIBROS downloadExcel -->
                 <b-button variant="dark" :href="`/downloadExcel/${queryEditorial}`"> 
-                    <i class="fa fa-download"></i> Descargar lista
+                    <i class="fa fa-download"></i> Lista
                 </b-button>
             </b-col>
             <b-col sm="3" class="text-right">

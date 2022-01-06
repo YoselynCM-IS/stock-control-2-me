@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\DonacionesExport;
+use App\Exports\donaciones\DonacionExport;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
 use App\Donacione;
@@ -128,9 +129,6 @@ class DonacioneController extends Controller
     }
 
     public function download_regalo($id){
-        $regalo = Regalo::whereId($id)->with('donaciones.libro')->first();
-        $data['regalo'] = $regalo;
-        $pdf = PDF::loadView('download.pdf.donaciones.donacion', $data); 
-        return $pdf->download('donacion.pdf');
+        return Excel::download(new DonacionExport($id), 'nota-donacion.xlsx');
     }
 }

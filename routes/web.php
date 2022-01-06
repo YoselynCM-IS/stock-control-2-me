@@ -48,6 +48,7 @@ Route::name('administrador.')->prefix('administrador')->middleware(['auth', 'rol
 
     Route::get('/majestic', 'AdministradorController@majestic')->name('majestic');
     Route::get('/entradas-salidas', 'AdministradorController@entradas_salidas')->name('entradas-salidas');
+    Route::get('/cerrar', 'AdministradorController@cerrar')->name('cerrar');
 });
 
 // OFICINA
@@ -68,6 +69,7 @@ Route::name('oficina.')->prefix('oficina')->middleware(['auth', 'role:Oficina'])
     
     Route::get('/promociones', 'OficinaController@promociones')->name('promociones');
     Route::get('/notas', 'OficinaController@notas')->name('notas');
+    Route::get('/entradas-salidas', 'OficinaController@entradas_salidas')->name('entradas-salidas');
 });
 
 Route::name('captura.')->prefix('captura')->middleware(['auth', 'role:captura'])->group(function () {

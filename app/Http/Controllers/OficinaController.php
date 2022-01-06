@@ -83,4 +83,8 @@ class OficinaController extends Controller
         $notes = Note::orderBy('folio','desc')->get();
         return view('oficina.notas', compact('notes'));
     }
+
+    public function entradas_salidas(){
+        return view('oficina.entradas-salidas');
+    }
 }

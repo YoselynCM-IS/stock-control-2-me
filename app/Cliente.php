@@ -10,7 +10,7 @@ use App\Adeudo;
 class Cliente extends Model
 {
     protected $fillable = [
-        'id', 'name', 'contacto', 'email', 'telefono', 'direccion', 'condiciones_pago'
+        'id', 'name', 'contacto', 'email', 'telefono', 'direccion', 'condiciones_pago', 'rfc', 'fiscal'
     ];
 
     //Uno a muchos

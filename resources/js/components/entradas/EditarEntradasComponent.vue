@@ -58,7 +58,7 @@
                         v-if="entradas.length > 0"
                         variant="dark"
                         :href="`/downEntradasEXC/${inicio}/${final}/${editorial}/general`">
-                        <i class="fa fa-download"></i> EXCEL
+                        <i class="fa fa-download"></i> General
                     </b-button>
                     <!-- <b-button
                         v-if="entradas.length > 0"
@@ -106,13 +106,13 @@
                     {{ row.item.created_at | moment }}
                 </template>
                 <template v-slot:cell(editar)="row">
-                    <b-button v-if="(role_id == 2 || role_id == 6) && row.item.total == 0"
+                    <b-button v-if="(role_id === 1 || role_id == 2 || role_id == 6) && row.item.total == 0"
                         @click="editarEntrada(row.item, row.index)"
                         style="color:white;" variant="warning"> 
                         <i class="fa fa-pencil"></i>
                     </b-button>
                     <b-button
-                        v-if="(role_id == 2 || role_id == 6) && row.item.total > 0 && ((row.item.total - (row.item.total_pagos + row.item.total_devolucion)) > 0)"
+                        v-if="(role_id === 1 || role_id == 2 || role_id == 6) && row.item.total > 0 && ((row.item.total - (row.item.total_pagos + row.item.total_devolucion)) > 0)"
                         @click="registrarDevolucion(row.item, row.index)"
                         variant="primary">Devolución
                     </b-button>

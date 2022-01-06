@@ -127,11 +127,7 @@ class PromotionController extends Controller
 
     public function download_promocion($id){
         $promocion = Promotion::find($id);
-        $name_archivo = 'promocion_.xlsx';
+        $name_archivo = 'promocion_' . $promocion->folio . '.xlsx';
         return Excel::download(new PromotionExport($promocion->id), $name_archivo);
-        // $promocion = Promotion::whereId($id)->with('departures.libro')->first();
-        // $data['promocion'] = $promocion;
-        // $pdf = PDF::loadView('download.pdf.promociones.promocion', $data); 
-        // return $pdf->download('promocion.pdf');
     }
 }

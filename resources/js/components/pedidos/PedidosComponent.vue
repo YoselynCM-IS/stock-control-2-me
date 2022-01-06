@@ -24,7 +24,7 @@
                 </b-col>
                 <b-col sm="2" class="text-right">
                     <b-button variant="success" pill @click="newPedido()" 
-                    :disabled="load" class="mt-4" v-if="role_id == 2 || role_id == 6">
+                    :disabled="load" class="mt-4" v-if="role_id === 1 || role_id == 2 || role_id == 6">
                         <i class="fa fa-plus-circle"></i> Nuevo pedido
                     </b-button>
                 </b-col>
@@ -217,11 +217,11 @@
                     <h4><b>Detalles del pedido</b></h4>
                 </b-col>
                 <b-col>
-                    <b-button v-if="pedido.status == 'espera' && (role_id == 2 || role_id == 6)" variant="danger"
+                    <b-button v-if="pedido.status == 'espera' && (role_id === 1 || role_id == 2 || role_id == 6)" variant="danger"
                         pill :disabled="load" @click="openCancelar = true">
                         <i class="fa fa-close"></i> Cancelar
                     </b-button>
-                    <b-button v-if="pedido.status == 'espera' && (role_id == 2 || role_id == 6)" variant="primary" 
+                    <b-button v-if="pedido.status == 'espera' && (role_id === 1 || role_id == 2 || role_id == 6)" variant="primary" 
                         pill @click="act_status()" :disabled="load">
                         <i class="fa fa-refresh"></i> Actualizar estado
                     </b-button>

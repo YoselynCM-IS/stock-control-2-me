@@ -4,7 +4,7 @@
         <b-row>
             <b-col sm="4"><h5><b>Remisión No. {{ remision.id }}</b></h5></b-col>
             <b-col sm="2" class="text-right">
-                <b-button v-if="(role_id == 2 || role_id == 6) && remision.total_pagar === remision.total && remision.estado != 'Cancelado'"
+                <b-button v-if="(role_id === 1 || role_id == 2 || role_id == 6) && remision.total_pagar === remision.total && remision.estado != 'Cancelado'"
                     variant="dark" v-b-modal.modal-cancelar>
                     <i class="fa fa-close"></i> Cancelar
                 </b-button>

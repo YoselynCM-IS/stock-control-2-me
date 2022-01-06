@@ -28,6 +28,44 @@
                 </div>
             </b-row>
             <b-row class="my-1">
+                <b-col align="right">Dirección</b-col>
+                <div class="col-md-7">
+                    <b-form-input 
+                        id="input-direccion"
+                        style="text-transform:uppercase;"
+                        v-model="form.direccion" 
+                        :disabled="loaded"
+                        required>
+                    </b-form-input>
+                    <div v-if="errors && errors.direccion" class="text-danger">{{ errors.direccion[0] }}</div>
+                </div>
+            </b-row>
+            <b-row class="my-1">
+                <b-col align="right">RFC</b-col>
+                <div class="col-md-7">
+                    <b-form-input 
+                        id="input-rfc"
+                        style="text-transform:uppercase;"
+                        v-model="form.rfc"
+                        :disabled="loaded">
+                    </b-form-input>
+                    <div v-if="errors && errors.rfc" class="text-danger">{{ errors.rfc[0] }}</div>
+                </div>
+            </b-row>
+            <b-row class="my-1">
+                <b-col align="right">Dirección fiscal</b-col>
+                <div class="col-md-7">
+                    <b-form-input 
+                        id="input-fiscal"
+                        style="text-transform:uppercase;"
+                        v-model="form.fiscal" 
+                        :disabled="loaded"
+                        required>
+                    </b-form-input>
+                    <div v-if="errors && errors.fiscal" class="text-danger">{{ errors.fiscal[0] }}</div>
+                </div>
+            </b-row>
+            <b-row class="my-1">
                 <b-col align="right">Correo electrónico</b-col>
                 <div class="col-md-7">
                     <b-form-input 
@@ -50,19 +88,6 @@
                         required>
                     </b-form-input>
                     <div v-if="errors && errors.telefono" class="text-danger">{{ errors.telefono[0] }}</div>
-                </div>
-            </b-row>
-            <b-row class="my-1">
-                <b-col align="right">Dirección</b-col>
-                <div class="col-md-7">
-                    <b-form-input 
-                        id="input-direccion"
-                        style="text-transform:uppercase;"
-                        v-model="form.direccion" 
-                        :disabled="loaded"
-                        required>
-                    </b-form-input>
-                    <div v-if="errors && errors.direccion" class="text-danger">{{ errors.direccion[0] }}</div>
                 </div>
             </b-row>
             <b-row class="my-1">

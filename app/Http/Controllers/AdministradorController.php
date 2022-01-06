@@ -303,4 +303,14 @@ class AdministradorController extends Controller
                         ->withCount('entdepositos')->get();
         return view('administrador.entradas.pagos', compact('editoriales'));
     }
+
+    // CERRAR REMISIONES
+    public function cerrar(){
+        $responsables = \DB::table('responsables')->orderBy('responsable', 'asc')->get();
+        return view('administrador.cerrar', compact('responsables'));
+    }
+
+    public function entradas_salidas(){
+        return view('administrador.entradas-salidas');
+    }
 }

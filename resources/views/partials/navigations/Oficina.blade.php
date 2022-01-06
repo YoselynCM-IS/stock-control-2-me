@@ -53,6 +53,9 @@
 		<a class="dropdown-item" href="{{ route('oficina.notas') }}">
 			{{ __('Notas') }}
 		</a>
+		<a class="dropdown-item" href="{{ route('oficina.entradas-salidas') }}">
+			{{ __("Entradas / Salidas") }}
+		</a>
 	</div>
 </li>
 @include('partials.navigations.logged')
