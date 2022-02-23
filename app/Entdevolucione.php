@@ -13,7 +13,8 @@ class Entdevolucione extends Model
         'entrada_id', 
         'registro_id', 
         'unidades', 
-        'total'
+        'total',
+        'estado'
     ];
 
     //Uno a muchos (inversa)

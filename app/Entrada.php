@@ -14,6 +14,7 @@ class Entrada extends Model
         'folio',
         'editorial',
         'unidades', 
+        'unidades_devolucion',
         'total',
         'total_pagos',
         'total_devolucion'

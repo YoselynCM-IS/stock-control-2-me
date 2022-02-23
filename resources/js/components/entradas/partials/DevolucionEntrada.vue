@@ -6,7 +6,10 @@
                 <label><b>Editorial:</b> {{form.editorial}}</label>
             </b-col>
             <b-col>
-                <b-button variant="success" pill @click="confirmarDevolucion()"><i class="fa fa-check"></i> Guardar</b-button>
+                <b-button variant="success" pill 
+                    @click="confirmarDevolucion()">
+                    <i class="fa fa-check"></i> Guardar
+                </b-button>
             </b-col>
         </b-row>
         <b-table :items="form.registros" :fields="fieldsD">
@@ -16,16 +19,17 @@
             <template v-slot:cell(costo_unitario)="row">${{ row.item.costo_unitario | formatNumber }}</template>
             <template v-slot:cell(total_base)="row">${{ row.item.total_base | formatNumber }}</template>
             <template v-slot:cell(unidades_base)="row">
-                <b-input :id="`inpEntDev-${row.index}`" type="number" 
+                <b-form-input :id="`inpEntDev-${row.index}`" type="number" 
                     @change="obtenerSubtotal(row.item, row.index)"
-                    v-model="row.item.unidades_base">
-                </b-input>
+                    v-model="row.item.unidades_base"
+                    required :disabled="load">
+                </b-form-input>
             </template>
             <template #thead-top="row">
                 <tr>
                     <th colspan="4"></th>
-                    <th>{{ form.todo_unidades | formatNumber }}</th>
-                    <th>${{ form.todo_total | formatNumber }}</th>
+                    <th>{{ todo_unidades | formatNumber }}</th>
+                    <th>${{ todo_total | formatNumber }}</th>
                 </tr>
             </template>
         </b-table>
@@ -42,8 +46,8 @@
                 <template #thead-top="row">
                     <tr>
                         <th colspan="4"></th>
-                        <th>{{ form.todo_unidades | formatNumber }}</th>
-                        <th>{{ form.todo_total | formatNumber }}</th>
+                        <th>{{ todo_unidades | formatNumber }}</th>
+                        <th>{{ todo_total | formatNumber }}</th>
                     </tr>
                 </template>
             </b-table>
@@ -70,7 +74,7 @@
 import formatNumber from './../../../mixins/formatNumber';
 import toast from './../../../mixins/toast';
 export default {
-    props: ['form'],
+    props: ['formDev'],
     mixins: [formatNumber,toast],
     data(){
         return {
@@ -82,34 +86,48 @@ export default {
                 {key: 'unidades_base', label: 'Unidades'}, 
                 {key: 'total_base', label: 'Subtotal'}
             ],
-            load: false
+            load: false,
+            form: {},
+            todo_unidades: 0,
+            todo_total: 0
         }
+    },
+    created: function(){
+        this.form.id = this.formDev.entrada.id;
+        this.form.folio = this.formDev.entrada.folio;
+        this.form.editorial = this.formDev.entrada.editorial;
+        this.form.total = this.formDev.entrada.total;
+        this.form.unidades = this.formDev.entrada.unidades;
+        this.form.total_devolucion = this.formDev.entrada.total_devolucion;
+        this.form.created_at = this.formDev.entrada.created_at;
+        this.form.registros = this.formDev.entrada.registros;
+        this.form.entdevoluciones = this.formDev.entdevoluciones;
+        this.form.todo_total = 0;
+        this.form.todo_unidades = 0;
     },
     methods: {
         // GUARDAR DEVOLUCION
         confirmarDevolucion(){
-            if(this.form.todo_total > 0){
+            // if(this.form.todo_total > 0){
                 this.$refs['modal-confirmarDevolucion'].show();
-            } else {
-                this.makeToast('warning', 'El total debe ser mayor a cero.');
-            }
+            // } else {
+            //     this.makeToast('warning', 'El total debe ser mayor a cero.');
+            // }
         },
         obtenerSubtotal(registro, i){
             if(registro.unidades_base <= registro.libro.piezas){
                 if(registro.unidades_base >= 0){
-                    if(registro.unidades_base > registro.unidades_pendientes){
-                        this.makeToast('warning', 'Las unidades son mayor a las unidades pendientes');
-                        this.to_zero(i);
-                    }
-                    else{
+                    if(registro.unidades_base <= registro.unidades_pendientes){
                         this.form.registros[i].total_base = registro.unidades_base * registro.costo_unitario;
                         if(i + 1 < this.form.registros.length){
                             document.getElementById('inpEntDev-'+(i+1)).focus();
                             document.getElementById('inpEntDev-'+(i+1)).select();
                         }
+                    } else{
+                        this.makeToast('warning', 'Las unidades son mayor a las unidades pendientes');
+                        this.to_zero(i);
                     }
-                }
-                else{
+                } else{
                     this.makeToast('warning', 'Unidades invalidas');
                     this.to_zero(i);
                 } 
@@ -117,11 +135,14 @@ export default {
                 this.makeToast('warning', `Hay ${registro.libro.piezas} en existencia`);
                 this.to_zero(i);
             }
-            this.form.todo_unidades = 0;
-            this.form.todo_total = 0;
+            this.acumular_ut();
+        },
+        acumular_ut(){
+            this.todo_unidades = 0;
+            this.todo_total = 0;
             this.form.registros.forEach(registro => {
-                this.form.todo_unidades += parseInt(registro.unidades_base);
-                this.form.todo_total += parseFloat(registro.total_base);
+                this.todo_unidades += parseInt(registro.unidades_base);
+                this.todo_total += parseFloat(registro.total_base);
             });
         },
         to_zero(i){
@@ -131,6 +152,8 @@ export default {
         // CONFIRMAR DEVOLUCION
         guardarDevolucion(){
             this.load = true;
+            this.form.todo_unidades = this.todo_unidades;
+            this.form.todo_total = this.todo_total;
             axios.post('/entradas/devolucion', this.form).then(response => {
                 swal("OK", "La devolución se guardo correctamente.", "success")
                     .then((value) => { location.reload(); });

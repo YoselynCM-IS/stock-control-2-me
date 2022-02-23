@@ -456,6 +456,8 @@ Route::name('entradas.')->prefix('entradas')->group(function () {
     Route::put('update_costos', 'EntradaController@update_costos')->name('update_costos');
     ///Guardar devolución de la entrada
     Route::post('devolucion', 'EntradaController@devolucion')->name('devolucion');
+    // ENVIAR DEVOLUCIÓN
+    Route::put('send_devoluciones', 'EntradaController@send_devoluciones')->name('send_devoluciones');
 });
 
 //Obtener todos los cliente

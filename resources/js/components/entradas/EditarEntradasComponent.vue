@@ -111,8 +111,11 @@
                         style="color:white;" variant="warning"> 
                         <i class="fa fa-pencil"></i>
                     </b-button>
+                </template>
+                <template v-slot:cell(devolucion)="row">
                     <b-button
-                        v-if="(role_id === 1 || role_id == 2 || role_id == 6) && row.item.total > 0 && ((row.item.total - (row.item.total_pagos + row.item.total_devolucion)) > 0)"
+                        v-if="(role_id === 1 || role_id == 2 || role_id == 6) &&
+                        (row.item.unidades_devolucion < row.item.unidades)"
                         @click="registrarDevolucion(row.item, row.index)"
                         variant="primary">Devolución
                     </b-button>
@@ -121,6 +124,7 @@
                     <tr>
                         <th colspan="4"></th>
                         <th>{{ total_unidades | formatNumber }}</th>
+                        <th>{{ total_udevolucion | formatNumber }}</th>
                         <th>${{ total | formatNumber }}</th>
                         <th>${{ total_pagos | formatNumber }}</th>
                         <th>${{ total_devolucion | formatNumber }}</th>
@@ -178,14 +182,39 @@
                 </template>
             </b-table>
             <div class="mt-5" v-if="entdevoluciones.length > 0">
-                <h6><b>DEVOLUCIONES</b></h6>
-                <b-table :items="entdevoluciones" :fields="fieldsR">
+                <b-row>
+                    <b-col><h6><b>DEVOLUCIONES</b></h6></b-col>
+                    <b-col sm="2" class="text-right">
+                        <b-button v-if="checkBtnEnviar && (role_id === 1 || role_id == 2 || role_id == 6)" 
+                            variant="primary" pill :disabled="load"
+                            @click="sendDevolucion(entrada.id)">
+                            <i class="fa fa-angle-right"></i> Enviar
+                        </b-button>
+                    </b-col>
+                </b-row>
+                <b-table :items="entdevoluciones" :fields="fieldsRD">
                     <template v-slot:cell(index)="row">{{ row.index + 1}}</template>
                     <template v-slot:cell(isbn)="row">{{ row.item.registro.libro.ISBN }}</template>
                     <template v-slot:cell(titulo)="row">{{ row.item.registro.libro.titulo }}</template>
                     <template v-slot:cell(costo_unitario)="row">${{ row.item.registro.costo_unitario | formatNumber }}</template>
                     <template v-slot:cell(total)="row">${{ row.item.total | formatNumber }}</template>
                     <template v-slot:cell(unidades)="row">{{ row.item.unidades | formatNumber }}</template>
+                    <template v-slot:cell(created_at)="row">{{ row.item.created_at | moment }}</template>
+                    <template v-slot:cell(estado)="row">
+                        <b-badge v-if="row.item.estado == 'proceso'" variant="secondary">
+                            <i class="fa fa-close"></i>
+                        </b-badge>
+                        <b-badge v-else variant="success">
+                            <i class="fa fa-check"></i>
+                        </b-badge>
+                    </template>
+                    <template #thead-top="row">
+                    <tr>
+                        <th colspan="4"></th>
+                        <th>{{ entrada.unidades_devolucion | formatNumber }}</th>
+                        <th>${{ entrada.total_devolucion | formatNumber }}</th>
+                    </tr>
+                </template>
                 </b-table>
             </div>
             <!-- MODAL PARA MOSTRAR LOS PAGOS -->
@@ -310,7 +339,7 @@
                     </b-button>
                 </b-col>
             </b-row>
-            <devolucion-entrada :form="formDev"></devolucion-entrada>
+            <devolucion-entrada :formDev="formDev"></devolucion-entrada>
         </div>
         <!-- MODALS -->
         <!-- MODAL DE AYUDA-->
@@ -351,11 +380,14 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                     {key: 'index', label: 'N.'}, 
                     'folio',
                     {key: 'created_at', label: 'Fecha'},
-                    'editorial', 'unidades', 'total',
+                    'editorial', 'unidades',
+                    {key: 'unidades_devolucion', label: 'Unidades (Devolución)'},
+                    'total',
                     {key: 'total_pagos', label: 'Pagos'},
                     {key: 'total_devolucion', label: 'Devolución'},
                     {key: 'total_pendiente', label: 'Pagar'},
-                    {key: 'detalles', label: ''},  
+                    {key: 'detalles', label: ''},
+                    {key: 'devolucion', label: ''},  
                     {key: 'editar', label: ''}
                 ],
                 fieldsR: [
@@ -364,7 +396,17 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                     {key: 'titulo', label: 'Libro'}, 
                     {key: 'costo_unitario', label: 'Costo unitario'},
                     'unidades',
+                    {key: 'total', label: 'Subtotal'}
+                ],
+                fieldsRD: [
+                    {key: 'index', label: 'N.'}, 
+                    {key: 'isbn', label: 'ISBN'}, 
+                    {key: 'titulo', label: 'Libro'}, 
+                    {key: 'costo_unitario', label: 'Costo unitario'},
+                    'unidades',
                     {key: 'total', label: 'Subtotal'},
+                    {key: 'created_at', label: 'Fecha (Devolución)'},
+                    {key: 'estado', label: 'Enviado'}
                 ],
                 fieldsRP: [
                     {key: 'index', label: 'N.'}, 
@@ -379,12 +421,14 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                 mostrarDetalles: false,
                 entrada: {
                     id: 0,
-                    unidades: 0,
-                    total: 0,
-                    total_pagos: 0,
-                    total_pendiente: 0,
                     folio: '',
                     editorial: '',
+                    total: 0,
+                    total_pagos: 0,
+                    total_devolucion: 0,
+                    total_pendiente: 0,
+                    unidades: 0,
+                    unidades_devolucion: 0,
                     created_at: '',
                     items: []
                 },
@@ -426,7 +470,9 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                 },
                 mostrarAdd: false,
                 mostrarDevolucion: false,
-                formDev: {}
+                formDev: {},
+                total_udevolucion: 0,
+                checkBtnEnviar: false
             }
         },
         created: function(){
@@ -624,11 +670,19 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                 this.entrada.total = response.data.entrada.total;
                 this.entrada.total_pagos = response.data.entrada.total_pagos;
                 this.entrada.total_pendiente = this.entrada.total - this.entrada.total_pagos;
+                this.entrada.total_devolucion = response.data.entrada.total_devolucion;
                 this.entrada.unidades = response.data.entrada.unidades;
+                this.entrada.unidades_devolucion = response.data.entrada.unidades_devolucion;
                 this.entrada.created_at = response.data.entrada.created_at;
                 this.registros = response.data.entrada.registros;
                 this.pagos = response.data.entrada.repayments;
                 this.entdevoluciones = response.data.entdevoluciones;
+                
+                this.checkBtnEnviar = false;
+                this.entdevoluciones.forEach(ed => {
+                    if(ed.estado == 'proceso') this.checkBtnEnviar = true;
+                });
+
                 this.listadoEntradas = false;
             },
             acumular(){
@@ -637,14 +691,14 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                 this.total_devolucion = 0;
                 this.total_pendiente = 0;
                 this.total_unidades = 0;
+                this.total_udevolucion = 0;
                 this.entradas.forEach(entrada => {
-                    if(entrada.editorial !== 'MAJESTIC EDUCATION'){
-                        this.total += entrada.total;
-                        this.total_pagos += entrada.total_pagos;
-                        this.total_devolucion += entrada.total_devolucion;
-                        this.total_pendiente += entrada.total - entrada.total_pagos;
-                        this.total_unidades += entrada.unidades;
-                    }
+                    this.total += entrada.total;
+                    this.total_pagos += entrada.total_pagos;
+                    this.total_devolucion += entrada.total_devolucion;
+                    this.total_pendiente += entrada.total - entrada.total_pagos;
+                    this.total_unidades += entrada.unidades;
+                    this.total_udevolucion += entrada.unidades_devolucion;
                 });
             },
             sumatoriaSubtotal(){
@@ -682,18 +736,20 @@ import DevolucionEntrada from './partials/DevolucionEntrada.vue';
                 axios.get('/detalles_entrada', {params: {entrada_id: entrada.id}}).then(response => {
                     this.listadoEntradas = false;
                     this.mostrarDevolucion = true;
-                    this.formDev.id = response.data.entrada.id;
-                    this.formDev.folio = response.data.entrada.folio;
-                    this.formDev.editorial = response.data.entrada.editorial;
-                    this.formDev.total = response.data.entrada.total;
-                    this.formDev.unidades = response.data.entrada.unidades;
-                    this.formDev.total_devolucion = response.data.entrada.total_devolucion;
-                    this.formDev.created_at = response.data.entrada.created_at;
-                    this.formDev.registros = response.data.entrada.registros;
-                    this.formDev.entdevoluciones = response.data.entdevoluciones;
-                    this.formDev.todo_total = 0;
-                    this.formDev.todo_unidades = 0;
+                    this.formDev = response.data;
                 }).catch(error => {
+                    this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
+                });
+            },
+            sendDevolucion(entrada_id){
+                this.load = true;
+                let form = { entrada_id: entrada_id };
+                axios.put('/entradas/send_devoluciones', form).then(response => {
+                    swal("OK", "La devolución se envió correctamente.", "success")
+                        .then((value) => { location.reload(); });
+                    this.load = false;
+                }).catch(error => {
+                    this.load = false;
                     this.makeToast('danger', 'Ocurrió un problema. Verifica tu conexión a internet y/o vuelve a intentar.');
                 });
             }

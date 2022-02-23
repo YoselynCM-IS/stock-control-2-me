@@ -345,7 +345,7 @@ class EntradaController extends Controller
 
                     // DISMINUIR PIEZAS DE LOS LIBROS
                     \DB::table('libros')->whereId($item['libro']['id'])
-                    ->decrement('piezas', $unidades_base);
+                        ->decrement('piezas', $unidades_base);
                 }
                 $total += $total_base;
             });
@@ -353,7 +353,8 @@ class EntradaController extends Controller
             Entdevolucione::insert($lista_entdevoluciones);
 
             $entrada->update([
-                'total_devolucion' => $entrada->total_devolucion + $total
+                'total_devolucion' => $entrada->total_devolucion + $total,
+                'unidades_devolucion' => $entrada->unidades_devolucion + (int) $request->todo_unidades 
             ]);
             $editorial = Enteditoriale::where('editorial', $entrada->editorial)->first();
             $editorial->update([
@@ -463,5 +464,59 @@ class EntradaController extends Controller
 
     public function descargar_gralEdit(){
         return Excel::download(new EAccountExport, 'lista-editoriales.xlsx');
+    }
+
+    public function send_devoluciones(Request $request){
+        $fecha_actual = Carbon::now();
+        $devoluciones = Entdevolucione::where('entrada_id', $request->entrada_id)
+                        ->where('created_at', 'like', '%'.$fecha_actual->format('Y-m-d').'%')
+                        ->where('estado', 'proceso')
+                        ->with('registro.libro', 'entrada')->get();
+
+        $entrada = $devoluciones[0]->entrada;
+
+        $salida = \DB::connection('inventariocdmx')->table('salidas')
+                        ->where('folio', $entrada->folio)->first();
+
+        \DB::beginTransaction();
+        try {
+            $datos = [];
+            $devoluciones->map(function($devolucion) use(&$datos, $fecha_actual, $salida){
+                $libro = \DB::connection('inventariocdmx')->table('libros')
+                        ->where('titulo', $devolucion->registro->libro->titulo)->first();
+                
+                $libro_id = $libro->id;
+                $unidades = $devolucion->unidades;
+
+                $dato = [
+                    'salida_id' => $salida->id,
+                    'libro_id' => $libro_id,
+                    'unidades' => $unidades,
+                    'created_at' => $fecha_actual,
+                    'updated_at' => $fecha_actual
+                ];
+
+                \DB::connection('inventariocdmx')->table('libros')
+                        ->where('id', $libro_id)
+                        ->increment('piezas', $unidades);
+
+                $devolucion->update([ 'estado' => 'enviado' ]);
+                $datos[] = $dato;
+            });
+
+            \DB::connection('inventariocdmx')->table('saldevoluciones')
+                    ->insert($datos);
+
+            \DB::connection('inventariocdmx')->table('salidas')
+                    ->where('folio', $entrada->folio)
+                    ->update([
+                        'unidades_devolucion' => $entrada->unidades_devolucion
+                    ]);
+            \DB::commit();
+        } catch (Exception $e) {
+            \DB::rollBack();
+            return response()->json($exception->getMessage());
+        }
+        return response()->json(true);
     }
 }
